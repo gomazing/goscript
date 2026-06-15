@@ -11,11 +11,11 @@ agents/
   ceo/
     brain.md
     skills.md
-    manifest.json
+    manifest.hyper
   cfo/
     brain.md
     skills.md
-    manifest.json
+    manifest.hyper
 ```
 
 ## Rules
@@ -23,9 +23,8 @@ agents/
 - Use one folder per autonomous role
 - Put long-term thinking and mission in `brain.md`
 - Put task behavior and role capabilities in `skills.md`
-- Put runtime identity, permissions, and lifecycle settings in `manifest.json`
+- Put runtime identity, permissions, and lifecycle settings in `manifest.hyper`
 
 ## Templates
 
 Starter templates live under `agents/templates/employee/`.
-

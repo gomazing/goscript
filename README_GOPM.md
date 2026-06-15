@@ -2,9 +2,13 @@
 
 GOPM is a comprehensive package manager for Go projects, with special support for GoScript ecosystem components including Gocsx, WebGPU, GoUIX, and GoScale.
 
-GoScript projects can also carry a shared `base/` guidance layer for AI coders and an `agents/` layer for runtime autonomous employees. Deployment manifests should declare `mode: "cs"` or `mode: "sw"` so build tools can understand topology before export.
+GoScript projects can also carry a shared `base/` guidance layer for AI coders and an `agents/` layer for runtime autonomous employees. Project Hyper files should declare `mode: cs` or `mode: sw` so build tools can understand topology before export.
 
-`gopm setup` now scaffolds that topology directly. It can create `cs` or `sw` project layouts, add the matching folder structure, and write a `manifests/<name>.manifest` file that `bo` can export later.
+`gopm setup` now scaffolds that topology directly. It can create `cs` or `sw` project layouts, add the matching folder structure, and write a `packs/<name>.pack` file that `bo` can export later.
+
+The same setup flow now also writes a project package Hyper file (`gopm.hyper`) and can generate a lockfile from it. That gives GoScript projects a package-level ecosystem contract instead of only a deployment pack.
+
+For the deployment shape of the two modes, see [docs/DEPLOYMENT_MODES.md](docs/DEPLOYMENT_MODES.md).
 
 ## Features
 
@@ -15,11 +19,12 @@ GoScript projects can also carry a shared `base/` guidance layer for AI coders a
 - **GoUIX Support**: Create and test UI components
 - **GoScale API Support**: Create and deploy APIs with edge computing capabilities
 - **GoScale DB Support**: Manage databases with time series and NoSQL features
+- **Project manifest and lockfile support**: Scaffold `gopm.hyper`, inspect Hyper files, and generate `goscript.lock.hyper`
 
 ## Installation
 
 ```bash
-go install github.com/davidjeba/goscript/cmd/gopm@latest
+go install github.com/gomazing/goscript/cmd/gopm@latest
 ```
 
 ## Basic Usage
@@ -64,7 +69,19 @@ gopm setup --cs --type website my-site
 
 # Scaffold an ERP in swarm mode with a bo-ready manifest
 gopm setup --sw --type erp my-erp
+
+# Inspect or scaffold the package manifest
+gopm manifest
+
+# Generate a lockfile from the project manifest
+gopm lock
 ```
+
+## Project Manifests and Lockfiles
+
+`gopm.hyper` is the package-level Hyper file for a GoScript project. It describes the project name, mode, type, package manager label, scripts, and dependency sets.
+
+`goscript.lock.hyper` is the resolved lockfile emitted from the project Hyper file. It gives the ecosystem a stable dependency snapshot that tools, agents, and CI can read back later.
 
 ## Gocsx CSS Framework Commands
 
@@ -290,83 +307,59 @@ gopm db:timeseries metrics
 
 ## Configuration
 
-GOPM uses a configuration file located at `~/.gopm/config.json` or in the project directory as `.gopmrc.json`.
+GOPM uses a configuration file located at `~/.gopm/config.hyper` or in the project directory as `.gopmrc.hyper`.
 
 Example configuration:
 
-```json
-{
-  "registry": "https://registry.gopm.dev",
-  "cache-dir": "~/.gopm/cache",
-  "global-dir": "~/.gopm/global",
-  "proxy": {
-    "enabled": true,
-    "url": "https://proxy.gopm.dev"
-  },
-  "timeout": 60,
-  "retry-count": 3,
-  "max-concurrent": 10,
-  "strict-ssl": true,
-  "save-exact": false,
-  "production": false,
-  "development": true,
-  "ignore-scripts": false,
-  "force-fetch": false,
-  "offline-mode": false,
-  "compression-level": 6
-}
+```hyper
+<gopm-config>
+  <registry>https://registry.gopm.dev</registry>
+  <cache-dir>~/.gopm/cache</cache-dir>
+  <global-dir>~/.gopm/global</global-dir>
+  <proxy>
+    <enabled>true</enabled>
+    <url>https://proxy.gopm.dev</url>
+  </proxy>
+  <timeout>60</timeout>
+  <retry-count>3</retry-count>
+  <max-concurrent>10</max-concurrent>
+  <strict-ssl>true</strict-ssl>
+  <save-exact>false</save-exact>
+  <production>false</production>
+  <development>true</development>
+  <ignore-scripts>false</ignore-scripts>
+  <force-fetch>false</force-fetch>
+  <offline-mode>false</offline-mode>
+  <compression-level>6</compression-level>
+</gopm-config>
 ```
 
 ## Project Configuration
 
-GOPM uses a `gopm.json` file in the project directory to manage dependencies and project configuration.
+GOPM uses a `gopm.hyper` file in the project directory to manage dependencies and project configuration.
 
-Example `gopm.json`:
+Example `gopm.hyper`:
 
-```json
-{
-  "name": "my-project",
-  "version": "1.0.0",
-  "description": "My awesome project",
-  "main": "main.go",
-  "scripts": {
-    "start": "go run main.go",
-    "build": "go build -o app main.go",
-    "test": "go test ./..."
-  },
-  "dependencies": {
-    "github.com/davidjeba/goscript": "^1.0.0",
-    "github.com/davidjeba/gocsx": "^1.0.0"
-  },
-  "devDependencies": {
-    "github.com/stretchr/testify": "^1.8.0"
-  },
-  "engines": {
-    "go": ">=1.18"
-  },
-  "gocsx": {
-    "theme": "default",
-    "breakpoints": {
-      "sm": "640px",
-      "md": "768px",
-      "lg": "1024px",
-      "xl": "1280px"
-    }
-  },
-  "webgpu": {
-    "shaders": "./shaders"
-  },
-  "goscale": {
-    "api": {
-      "port": 8080,
-      "edge-enabled": true
-    },
-    "db": {
-      "connection-string": "localhost:5432",
-      "time-series-enabled": true
-    }
-  }
-}
+```hyper
+<project name="my-project" version="1.0.0">
+  <description>My awesome project</description>
+  <main>main.go</main>
+  <scripts>
+    <item key="start">go run main.go</item>
+    <item key="build">go build -o app main.go</item>
+    <item key="test">go test ./...</item>
+  </scripts>
+  <dependencies>
+    <item key="github.com/gomazing/goscript">^1.0.0</item>
+    <item key="github.com/gomazing/goscript/pkg/gocsx">^1.0.0</item>
+  </dependencies>
+  <dev-dependencies>
+    <item key="github.com/stretchr/testify">^1.8.0</item>
+  </dev-dependencies>
+  <engines>
+    <go>>=1.18</go>
+  </engines>
+</project>
 ```
 
 ## Contributing
@@ -375,4 +368,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT License
+Apache License, Version 2.0

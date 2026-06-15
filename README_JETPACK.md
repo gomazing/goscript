@@ -1,6 +1,6 @@
-# Jetpack - Performance Monitoring and Optimization
+# Go Jetpack - Performance Monitoring and Optimization
 
-Jetpack is a comprehensive performance monitoring and optimization toolkit for web applications, providing real-time metrics, Google Lighthouse integration, and security monitoring.
+Go Jetpack is the performance, observability, and verification companion for GoScript. It helps GoScript's Go FAST, Go PAINT, and Go IRT pillars stay measurable, tuned, and trusted.
 
 ## Features
 
@@ -15,7 +15,7 @@ Jetpack is a comprehensive performance monitoring and optimization toolkit for w
 ## Installation
 
 ```bash
-# Install Jetpack using GOPM
+# Install Go Jetpack using GOPM
 gopm jetpack init
 ```
 
@@ -73,8 +73,8 @@ gopm jetpack security tls example.com:443
 ### Exporting and Reporting
 
 ```bash
-# Export metrics to JSON
-gopm jetpack export json --output=metrics.json
+# Export metrics to Hyper
+gopm jetpack export hyper --output=metrics.hyper
 
 # Generate a performance report
 gopm jetpack report performance --output=performance-report.html
@@ -223,46 +223,57 @@ Jetpack integrates seamlessly with the GoScript ecosystem:
 
 ## Configuration
 
-Jetpack uses a configuration file located at `~/.jetpack/config.json` or in the project directory as `.jetpackrc.json`.
+Jetpack uses a configuration file located at `~/.jetpack/config.hyper` or in the project directory as `.jetpackrc.hyper`.
 
 Example configuration:
 
-```json
-{
-  "monitoring": {
-    "enabled": true,
-    "target": "http://localhost:3000",
-    "refresh_rate": 1000,
-    "metrics": ["fps", "memory_usage", "api_latency", "page_load"]
-  },
-  "panel": {
-    "enabled": true,
-    "position": "bottom-right",
-    "opacity": 0.8,
-    "theme": "dark",
-    "show_charts": true,
-    "show_alerts": true
-  },
-  "lighthouse": {
-    "enabled": true,
-    "categories": ["performance", "accessibility", "best-practices", "seo", "pwa"],
-    "throttling": true
-  },
-  "security": {
-    "enabled": true,
-    "vulnerability_scan_enabled": true,
-    "auth_tracking_enabled": true,
-    "anomaly_detection_enabled": true,
-    "compliance_check_enabled": true,
-    "scan_interval": 3600
-  },
-  "export": {
-    "enabled": true,
-    "format": "json",
-    "interval": 3600,
-    "path": "./jetpack-metrics.json"
-  }
-}
+```hyper
+<jetpack-config>
+  <monitoring>
+    <enabled>true</enabled>
+    <target>http://localhost:3000</target>
+    <refresh_rate>1000</refresh_rate>
+    <metrics>
+      <item>fps</item>
+      <item>memory_usage</item>
+      <item>api_latency</item>
+      <item>page_load</item>
+    </metrics>
+  </monitoring>
+  <panel>
+    <enabled>true</enabled>
+    <position>bottom-right</position>
+    <opacity>0.8</opacity>
+    <theme>dark</theme>
+    <show_charts>true</show_charts>
+    <show_alerts>true</show_alerts>
+  </panel>
+  <lighthouse>
+    <enabled>true</enabled>
+    <categories>
+      <item>performance</item>
+      <item>accessibility</item>
+      <item>best-practices</item>
+      <item>seo</item>
+      <item>pwa</item>
+    </categories>
+    <throttling>true</throttling>
+  </lighthouse>
+  <security>
+    <enabled>true</enabled>
+    <vulnerability_scan_enabled>true</vulnerability_scan_enabled>
+    <auth_tracking_enabled>true</auth_tracking_enabled>
+    <anomaly_detection_enabled>true</anomaly_detection_enabled>
+    <compliance_check_enabled>true</compliance_check_enabled>
+    <scan_interval>3600</scan_interval>
+  </security>
+  <export>
+    <enabled>true</enabled>
+    <format>hyper</format>
+    <interval>3600</interval>
+    <path>./jetpack-metrics.hyper</path>
+  </export>
+</jetpack-config>
 ```
 
 ## Contributing
@@ -271,4 +282,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT License
+Apache License, Version 2.0

@@ -25,12 +25,12 @@ func AddComponent(name string) error {
 	template := fmt.Sprintf(`package components
 
 import (
-	"github.com/davidjeba/goscript/pkg/goscript"
+	"github.com/gomazing/goscript/pkg/goscript"
 )
 
 func %s(props goscript.Props) string {
-	return goscript.createElement("div", nil,
-		goscript.createElement("h1", nil, "%s Component"),
+	return goscript.CreateElement("div", nil,
+		goscript.CreateElement("h1", nil, "%s Component"),
 	)
 }
 `, name, name)
@@ -42,4 +42,3 @@ func %s(props goscript.Props) string {
 	fmt.Printf("Created new component: %s\n", filename)
 	return nil
 }
-

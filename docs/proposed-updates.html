@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="GoScript proposed updates for review: a better alternate to JavaScript for the AI era, with WebGPU, Swarm, BO, Vibe, and modular runtime ideas." />
+  <meta name="theme-color" content="#08111f" />
+  <title>GoScript Proposed Updates</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07111d;
+      --bg-2: #0b1727;
+      --panel: rgba(12, 24, 40, 0.82);
+      --panel-strong: rgba(17, 31, 52, 0.94);
+      --border: rgba(148, 163, 184, 0.2);
+      --text: #e5eefc;
+      --muted: #9fb2c9;
+      --soft: #c7d2e0;
+      --accent: #35c6ff;
+      --accent-2: #ff9f43;
+      --accent-3: #7dd3fc;
+      --good: #65d6a8;
+      --warn: #ffcb77;
+      --danger: #ff7a90;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(53, 198, 255, 0.16), transparent 28%),
+        radial-gradient(circle at top right, rgba(255, 159, 67, 0.12), transparent 32%),
+        linear-gradient(180deg, #050b14 0%, var(--bg) 48%, #050b14 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent-3); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 42px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(14, 28, 47, 0.95), rgba(9, 16, 28, 0.92)),
+        linear-gradient(135deg, rgba(53, 198, 255, 0.16), rgba(255, 159, 67, 0.12));
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: radial-gradient(circle at 20% 10%, rgba(53, 198, 255, 0.18), transparent 24%),
+                  radial-gradient(circle at 80% 20%, rgba(255, 159, 67, 0.15), transparent 24%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid rgba(125, 211, 252, 0.25);
+      border-radius: 999px;
+      background: rgba(10, 18, 31, 0.7);
+      color: var(--soft);
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+
+    .title {
+      margin: 18px 0 12px;
+      font-size: clamp(2.4rem, 5vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
+      max-width: 12ch;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 70ch;
+      font-size: 1.08rem;
+      color: var(--muted);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      position: relative;
+      z-index: 1;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(7, 16, 28, 0.72);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .section {
+      margin-top: 28px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 1.6rem;
+      letter-spacing: -0.03em;
+    }
+
+    .section p.lead {
+      margin: 0 0 18px;
+      color: var(--muted);
+      max-width: 80ch;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(125, 211, 252, 0.18);
+      background: rgba(13, 24, 40, 0.86);
+      color: var(--soft);
+      font-size: 0.88rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: linear-gradient(180deg, rgba(14, 28, 47, 0.96), rgba(8, 15, 27, 0.92));
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+    }
+
+    .card .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-3);
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+    }
+
+    .card ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .compare .old,
+    .compare .future {
+      padding: 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    .compare .old {
+      background: rgba(58, 20, 32, 0.42);
+    }
+
+    .compare .future {
+      background: rgba(16, 41, 34, 0.4);
+    }
+
+    .compare h3 {
+      margin: 0 0 8px;
+      font-size: 1.08rem;
+    }
+
+    .compare strong {
+      color: #fff;
+    }
+
+    .prompt {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(4, 10, 18, 0.75);
+      overflow-x: auto;
+    }
+
+    .prompt code {
+      color: #d6f3ff;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.92rem;
+      white-space: pre-wrap;
+    }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .check {
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(8, 16, 28, 0.82);
+    }
+
+    .check b {
+      display: block;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .check span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      margin-top: 26px;
+      padding: 18px 4px 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid,
+      .grid,
+      .compare,
+      .checklist {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <span class="eyebrow">GoScript proposal page · share with other agentic AIs</span>
+      <h1 class="title">Proposed updates for a better alternate to JavaScript</h1>
+      <p class="subtitle">
+        This page is a discussion board for the next wave of GoScript. It focuses on the radical
+        features that make the language feel future-facing: direct WebGPU rendering, coordinate
+        vectors, BO slicing, swarm modules, AST-first exports, and a DOM-bypassing canvas runtime.
+      </p>
+
+      <div class="pill-row">
+        <span class="pill">Go FAST · compile-time speed</span>
+        <span class="pill">Go PAINT · spatial canvas UI</span>
+        <span class="pill">Go IRT · realtime modules</span>
+        <span class="pill">Go Jetpack · performance proof</span>
+      </div>
+
+      <div class="hero-grid">
+        <div class="stat">
+          <strong>WebGPU first</strong>
+          <span>Render directly to a canvas-backed pipeline instead of staying trapped in DOM-era thinking.</span>
+        </div>
+        <div class="stat">
+          <strong>Modular export</strong>
+          <span>Slice apps into deployable units with BO instead of shipping one giant bundle every time.</span>
+        </div>
+        <div class="stat">
+          <strong>Agentic-friendly</strong>
+          <span>Let other AIs build, benchmark, and critique GoScript on shared rules and test prompts.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>What makes GoScript feel new</h2>
+      <p class="lead">
+        The goal is not to imitate the legacy web stack. The goal is to promote features that are
+        radically different, visibly useful, and difficult to reproduce cleanly in JavaScript,
+        Node.js, and the old framework ecosystem.
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <div class="label">Go PAINT · Rendering</div>
+          <h3>Direct pipeline to WebGPU</h3>
+          <p>Let GoScript paint interfaces as a native render pipeline, not just HTML that eventually becomes pixels.</p>
+          <ul>
+            <li>2D UI layers</li>
+            <li>3D scene layers</li>
+            <li>GPU-backed animation and composition</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Go PAINT · Layout</div>
+          <h3>Go coordinate vectors</h3>
+          <p>Model components as spatial objects with explicit coordinates, scaling, and collision maps.</p>
+          <ul>
+            <li>Figma-style positioning</li>
+            <li>Responsive vector transforms</li>
+            <li>Click-target collision detection</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Go FAST · Packaging</div>
+          <h3>npm killer workflow</h3>
+          <p>Replace runtime package chaos with manifests, lockfiles, and export slices that are easy to inspect.</p>
+          <ul>
+            <li>Project manifests</li>
+            <li>Resolved lockfiles</li>
+            <li>Slice-based exports</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Go IRT · Architecture</div>
+          <h3>Cellular micro frontend architecture</h3>
+          <p>Let modules become deployable units with their own trust rules, not just components inside a page tree.</p>
+          <ul>
+            <li>Module ownership</li>
+            <li>Local, edge, and secure remote nodes</li>
+            <li>Swarm topology contracts</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Go FAST · Compiler</div>
+          <h3>AST-first build pipeline</h3>
+          <p>Keep the compiler and export flow grounded in structural understanding so AI builders can reason about code paths safely.</p>
+          <ul>
+            <li>Canonical AST transforms</li>
+            <li>Module graph planning</li>
+            <li>Inspectable build output</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Go IRT · Interaction</div>
+          <h3>Hyper / HTTP killer</h3>
+          <p>Reduce internal chatter by moving toward binary, persistent, and zero-copy-friendly communication paths where possible.</p>
+          <ul>
+            <li>Realtime event routing</li>
+            <li>Streaming state sync</li>
+            <li>Less text parsing overhead</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Go PAINT · UI feel</div>
+          <h3>DOM bypass</h3>
+          <p>Do not depend on the DOM as the center of truth for richer applications if the canvas or GPU can do the job better.</p>
+          <ul>
+            <li>Canvas-native interactions</li>
+            <li>Overlay UI and 3D scenes</li>
+            <li>More game-engine-like ergonomics</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Go FAST · Delivery</div>
+          <h3>BO as a product slicer</h3>
+          <p>Export modules, tools, pages, or app slices into deployable artifacts so one codebase can become many products.</p>
+          <ul>
+            <li>exe, goe, apk, ipa, dmg</li>
+            <li>Inspectable export manifests</li>
+            <li>Module-level packaging</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Old way vs future way</h2>
+      <p class="lead">
+        This is the message that usually gets people excited. The point is to show a clean break
+        from the browser-era defaults.
+      </p>
+
+      <div class="compare">
+        <div class="old">
+          <h3>Old way</h3>
+          <p><strong>HTML + CSS + JS</strong> with layout thrash, package drift, runtime bundling, and a lot of glue code between layers.</p>
+          <p><strong>Result:</strong> a stack that can do almost anything, but only after a lot of ceremony and dependency overhead.</p>
+        </div>
+        <div class="future">
+          <h3>Future way</h3>
+          <p><strong>GoScript + Vibe + BO + Swarm</strong> with native primitives for layout, motion, packaging, and modular deployment.</p>
+          <p><strong>Result:</strong> a language-first product system that can build websites, ERP tools, and app slices without leaning on legacy web assumptions.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>What to ask other agentic AIs to build</h2>
+      <p class="lead">
+        Use these prompts to test GoScript’s performance, feature experience, and ability to produce
+        something people would actually star.
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <div class="label">Performance test</div>
+          <h3>High-concurrency auth dashboard</h3>
+          <p>Ask an AI to build a permission-heavy admin dashboard with RBAC, live audit logs, and many concurrent requests.</p>
+          <ul>
+            <li>Tests routing and middleware cost</li>
+            <li>Tests state isolation under load</li>
+            <li>Tests logging and observability</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">UI experience test</div>
+          <h3>2D + 3D hybrid canvas page</h3>
+          <p>Ask for a dashboard that mixes 2D controls and a 3D product scene in the same surface.</p>
+          <ul>
+            <li>Tests canvas layout primitives</li>
+            <li>Tests WebGPU direction</li>
+            <li>Tests motion and interaction feel</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">ERP test</div>
+          <h3>Modular ERP with Swarm</h3>
+          <p>Ask for task, POS, and payments modules distributed across local, edge, and secure nodes.</p>
+          <ul>
+            <li>Tests `cs` vs `sw` topology</li>
+            <li>Tests trust rules and server identity</li>
+            <li>Tests module boundaries</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Workspace test</div>
+          <h3>Notion-style docs app</h3>
+          <p>Ask for block editing, inline tables, and a file browser in one workspace shell.</p>
+          <ul>
+            <li>Tests docs primitives</li>
+            <li>Tests inline editing flow</li>
+            <li>Tests app density and usability</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Packaging test</div>
+          <h3>BO module export</h3>
+          <p>Ask to slice a single module or page into an executable artifact with a manifest-driven build.</p>
+          <ul>
+            <li>Tests BO correctness</li>
+            <li>Tests export reproducibility</li>
+            <li>Tests deployability of a slice</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <div class="label">Motion test</div>
+          <h3>Go Vibe interaction demo</h3>
+          <p>Ask for spring transitions, hover/tap states, presence, and shared element motion in a polished UI.</p>
+          <ul>
+            <li>Tests motion primitives</li>
+            <li>Tests runtime animation quality</li>
+            <li>Tests visual polish</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="prompt" aria-label="Sample agent prompt">
+        <code>Build a GoScript-based modular ERP prototype with:
+1. a fast auth layer with RBAC and audit logs
+2. a 2D dashboard and one 3D widget in the same canvas
+3. one module that can be exported with BO as a standalone executable
+4. Swarm topology for one local module and one secure remote module
+5. a Notion-style workspace page with inline tables and file browsing
+
+Report back:
+- render speed
+- concurrency behavior
+- developer experience
+- feature feel
+- what made the platform feel impossible in a good way</code>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Future use cases</h2>
+      <p class="lead">
+        These are the stress targets that make GoScript feel like a future language instead of a
+        framework clone.
+      </p>
+
+      <div class="grid">
+        <article class="card">
+          <div class="label">Scale · Spreadsheets</div>
+          <h3>Planet-scale spreadsheet engine</h3>
+          <p>Target millions of concurrent users, enormous sheet counts, and live updates without the app falling apart.</p>
+        </article>
+        <article class="card">
+          <div class="label">Paint · Documents</div>
+          <h3>Figma-like document canvas</h3>
+          <p>Make documents feel like spatial surfaces with blocks, layers, zoom, and interactions instead of static text pages.</p>
+        </article>
+        <article class="card">
+          <div class="label">Workspaces · Notion</div>
+          <h3>Block docs and tables</h3>
+          <p>Build block-native documents, inline tables, linked views, and file browsing in one high-performance workspace.</p>
+        </article>
+        <article class="card">
+          <div class="label">Future hardware</div>
+          <h3>Ternary-ready execution</h3>
+          <p>Keep the architecture open to ternary, multi-valued, and future quantum-capable execution models.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>What feedback to ask for</h2>
+      <p class="lead">
+        When you share this page with other agentic AIs, ask them to answer these questions as
+        concretely as possible.
+      </p>
+
+      <div class="checklist">
+        <div class="check">
+          <b>What feels most original?</b>
+          <span>Ask which GoScript feature feels genuinely different from the legacy web stack.</span>
+        </div>
+        <div class="check">
+          <b>What would you build first?</b>
+          <span>Ask what kind of app would prove the platform fastest: ERP, marketplace, browser, or docs.</span>
+        </div>
+        <div class="check">
+          <b>What should be benchmarked?</b>
+          <span>Ask them to pick the top performance test cases for routing, rendering, memory, and concurrency.</span>
+        </div>
+        <div class="check">
+          <b>What feels hard to copy in JavaScript?</b>
+          <span>Ask them to identify the features that make GoScript look like a different class of language.</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Read more: <a href="../README.md">README</a> · <a href="FUTURE_WAY_VS_OLD_WAY.md">feature-by-feature guide</a> · <a href="AI_ADOPTION_CHECKLIST.md">AI adoption checklist</a>
+    </div>
+  </main>
+</body>
+</html>

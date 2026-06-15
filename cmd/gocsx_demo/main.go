@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/davidjeba/goscript/pkg/gocsx"
-	"github.com/davidjeba/goscript/pkg/gocsx/components"
+	"github.com/gomazing/goscript/pkg/gocsx"
+	"github.com/gomazing/goscript/pkg/gocsx/components"
 )
 
 func main() {

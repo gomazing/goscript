@@ -59,3 +59,22 @@ func TestDocumentIndex(t *testing.T) {
 		t.Fatalf("expected completion results")
 	}
 }
+
+func BenchmarkRenderHydrationShell(b *testing.B) {
+	payload := HydrationPayload{
+		AppID:   "bench",
+		State:   map[string]interface{}{"count": 1, "name": "goscript"},
+		Meta:    map[string]string{"theme": "dark"},
+		Styles:  []string{".app{display:block;}", ".title{font-weight:600;}"},
+		Scripts: []string{"window.__goscript = true;"},
+	}
+
+	content := "<div class=\"app\"><h1>GoScript</h1></div>"
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := RenderHydrationShell(content, payload); err != nil {
+			b.Fatalf("unexpected hydration error: %v", err)
+		}
+	}
+}

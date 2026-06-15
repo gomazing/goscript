@@ -2,15 +2,15 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
 
-	"github.com/davidjeba/goscript/pkg/goscale/api"
-	"github.com/davidjeba/goscript/pkg/goscale/db"
-	"github.com/davidjeba/goscript/pkg/goscale/edge"
+	"github.com/gomazing/goscript/pkg/goscale/api"
+	"github.com/gomazing/goscript/pkg/goscale/db"
+	"github.com/gomazing/goscript/pkg/goscale/edge"
+	"github.com/gomazing/goscript/pkg/hyper"
 )
 
 func main() {
@@ -173,11 +173,11 @@ func main() {
 	http.HandleFunc("/edge", func(w http.ResponseWriter, r *http.Request) {
 		// Parse the request
 		var request struct {
-			Path   string                 `json:"path"`
-			Params map[string]interface{} `json:"params"`
+			Path   string                 `hyper:"path"`
+			Params map[string]interface{} `hyper:"params"`
 		}
 		
-		if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		if err := hyper.NewDecoder(r.Body).Decode(&request); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -194,10 +194,13 @@ func main() {
 		}
 		
 		// Return the result
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		w.Header().Set("Content-Type", "application/hyper")
+		if err := hyper.NewEncoder(w).Encode(map[string]interface{}{
 			"data": result,
-		})
+		}); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 	
 	http.HandleFunc("/metrics", func(w http.ResponseWriter, r *http.Request) {
@@ -207,14 +210,17 @@ func main() {
 		edge2Metrics := edgeNode2.GetMetrics()
 		
 		// Return the metrics
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		w.Header().Set("Content-Type", "application/hyper")
+		if err := hyper.NewEncoder(w).Encode(map[string]interface{}{
 			"api": apiMetrics,
 			"edge": map[string]interface{}{
 				"edge-1": edge1Metrics,
 				"edge-2": edge2Metrics,
 			},
-		})
+		}); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 	
 	// Create a simple UI for testing
@@ -322,8 +328,8 @@ func main() {
                 </select>
             </div>
             <div class="form-group">
-                <label for="query-params">Parameters (JSON)</label>
-                <textarea id="query-params" rows="5">{"id": 123}</textarea>
+                <label for="query-params">Parameters (Hyper)</label>
+                <textarea id="query-params" rows="5"><hyper><id>123</id></hyper></textarea>
             </div>
             <button id="run-query">Run Query</button>
         </div>
@@ -342,8 +348,8 @@ func main() {
                 </select>
             </div>
             <div class="form-group">
-                <label for="mutation-params">Parameters (JSON)</label>
-                <textarea id="mutation-params" rows="5">{"name": "John Doe", "email": "john@example.com"}</textarea>
+                <label for="mutation-params">Parameters (Hyper)</label>
+                <textarea id="mutation-params" rows="5"><hyper><name>John Doe</name><email>john@example.com</email></hyper></textarea>
             </div>
             <button id="run-mutation">Run Mutation</button>
         </div>
@@ -359,8 +365,8 @@ func main() {
                 <input type="text" id="edge-path" value="query:getUser">
             </div>
             <div class="form-group">
-                <label for="edge-params">Parameters (JSON)</label>
-                <textarea id="edge-params" rows="5">{"id": 123}</textarea>
+                <label for="edge-params">Parameters (Hyper)</label>
+                <textarea id="edge-params" rows="5"><hyper><id>123</id></hyper></textarea>
             </div>
             <button id="run-edge">Run Edge Request</button>
         </div>
@@ -392,23 +398,23 @@ func main() {
         // Query
         document.getElementById('run-query').addEventListener('click', async () => {
             const queryType = document.getElementById('query-type').value;
-            const params = JSON.parse(document.getElementById('query-params').value);
+            const params = hyper.parse(document.getElementById('query-params').value);
             
             try {
                 const response = await fetch('/api', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/hyper'
                     },
-                    body: JSON.stringify({
+                    body: hyper.stringify({
                         query: queryType,
                         variables: params,
                         operation: 'query:' + queryType
                     })
                 });
                 
-                const result = await response.json();
-                document.getElementById('query-result').textContent = JSON.stringify(result, null, 2);
+                const result = await response.hyper();
+                document.getElementById('query-result').textContent = hyper.stringify(result, null, 2);
             } catch (error) {
                 document.getElementById('query-result').textContent = 'Error: ' + error.message;
             }
@@ -417,23 +423,23 @@ func main() {
         // Mutation
         document.getElementById('run-mutation').addEventListener('click', async () => {
             const mutationType = document.getElementById('mutation-type').value;
-            const params = JSON.parse(document.getElementById('mutation-params').value);
+            const params = hyper.parse(document.getElementById('mutation-params').value);
             
             try {
                 const response = await fetch('/api', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/hyper'
                     },
-                    body: JSON.stringify({
+                    body: hyper.stringify({
                         query: mutationType,
                         variables: params,
                         operation: 'mutation:' + mutationType
                     })
                 });
                 
-                const result = await response.json();
-                document.getElementById('mutation-result').textContent = JSON.stringify(result, null, 2);
+                const result = await response.hyper();
+                document.getElementById('mutation-result').textContent = hyper.stringify(result, null, 2);
             } catch (error) {
                 document.getElementById('mutation-result').textContent = 'Error: ' + error.message;
             }
@@ -442,22 +448,22 @@ func main() {
         // Edge
         document.getElementById('run-edge').addEventListener('click', async () => {
             const path = document.getElementById('edge-path').value;
-            const params = JSON.parse(document.getElementById('edge-params').value);
+            const params = hyper.parse(document.getElementById('edge-params').value);
             
             try {
                 const response = await fetch('/edge', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/hyper'
                     },
-                    body: JSON.stringify({
+                    body: hyper.stringify({
                         path: path,
                         params: params
                     })
                 });
                 
-                const result = await response.json();
-                document.getElementById('edge-result').textContent = JSON.stringify(result, null, 2);
+                const result = await response.hyper();
+                document.getElementById('edge-result').textContent = hyper.stringify(result, null, 2);
             } catch (error) {
                 document.getElementById('edge-result').textContent = 'Error: ' + error.message;
             }
@@ -467,8 +473,8 @@ func main() {
         document.getElementById('get-metrics').addEventListener('click', async () => {
             try {
                 const response = await fetch('/metrics');
-                const result = await response.json();
-                document.getElementById('metrics-result').textContent = JSON.stringify(result, null, 2);
+                const result = await response.hyper();
+                document.getElementById('metrics-result').textContent = hyper.stringify(result, null, 2);
             } catch (error) {
                 document.getElementById('metrics-result').textContent = 'Error: ' + error.message;
             }

@@ -1,0 +1,15 @@
+<hyper kind="vercel-config">
+  <version>2</version>
+  <builds>
+    <item>
+      <src>api/*.go</src>
+      <use>@vercel/go</use>
+    </item>
+  </builds>
+  <routes>
+    <item>
+      <src>/(.*)</src>
+      <dest>/api/index.go</dest>
+    </item>
+  </routes>
+</hyper>

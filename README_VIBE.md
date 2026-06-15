@@ -18,6 +18,7 @@ It is not a clone of the React package surface. The goal is to steal the capabil
 - `pkg/vibe/transition.go`: animation timing and spring/tween/inertia transitions
 - `pkg/vibe/motion_value.go`: subscribable motion values with velocity tracking
 - `pkg/vibe/variant.go`: style targets, variants, gesture targets, and motion props
+- `pkg/vibe/runtime.go`: motion phases, timeline sampling, reduced-motion policy, stagger helpers, spring stepping, and inertia projection
 - `pkg/vibe/layout.go`: transform-style layout delta calculation
 - `pkg/vibe/presence.go`: AnimatePresence-style lifecycle tracking
 - `pkg/vibe/viewport.go`: scroll progress and in-view configuration
@@ -32,6 +33,10 @@ It is not a clone of the React package surface. The goal is to steal the capabil
 | `layout` / `layoutId` | `LayoutSnapshot` + `ComputeLayoutDelta` |
 | `useScroll` / motion values | `MotionValue` + `ScrollState` |
 | `useInView` / `whileInView` | `InViewOptions` + `WhileInView` |
+| motion phases | `ResolveMotionProps` |
+| keyframe timelines | `MotionSequence` |
+| reduced motion | `MotionRuntimeConfig` + `ApplyReducedMotion` |
+| staggered orchestration | `StaggerConfig` |
 
 ## What is still missing
 
@@ -40,6 +45,8 @@ It is not a clone of the React package surface. The goal is to steal the capabil
 - Scroll observers and viewport tracking at runtime
 - Gesture-to-variant execution in actual components
 - Shared element transitions across route/view changes
+- Drag physics and more advanced gesture orchestration
+- Motion timelines and sequencing primitives in rendered components
 
 ## Why this matters
 

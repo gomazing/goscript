@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/davidjeba/goscript/pkg/gocsx/core"
+	"github.com/gomazing/goscript/pkg/gocsx/core"
 )
 
 // CardProps represents card props

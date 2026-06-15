@@ -152,8 +152,8 @@ func jetpackExport(args []string) {
 
 	format := args[0]
 	switch format {
-	case "json":
-		fmt.Println("Exporting metrics to JSON")
+	case "hyper":
+		fmt.Println("Exporting metrics to Hyper")
 	case "csv":
 		fmt.Println("Exporting metrics to CSV")
 	case "prometheus":
@@ -224,7 +224,7 @@ Commands:
     headers [url]     Check security headers
     tls [host]        Check TLS configuration
   export             Export commands:
-    json              Export metrics to JSON
+    hyper             Export metrics to Hyper
     csv               Export metrics to CSV
     prometheus        Export metrics to Prometheus
   report             Report commands:
@@ -244,7 +244,7 @@ Examples:
   gopm jetpack panel show
   gopm jetpack metrics list
   gopm jetpack security scan
-  gopm jetpack export json
+  gopm jetpack export hyper
   gopm jetpack report performance
   gopm jetpack chrome build
 `

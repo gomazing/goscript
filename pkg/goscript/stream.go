@@ -3,6 +3,7 @@ package goscript
 import (
 	"sync"
 	"time"
+	"strings"
 )
 
 // StreamEvent represents a realtime message.
@@ -12,6 +13,20 @@ type StreamEvent struct {
 	Payload   interface{}
 	Source    string
 	Timestamp time.Time
+}
+
+// Normalize fills safe defaults for a stream event.
+func (e StreamEvent) Normalize(topic, source string, stamp time.Time) StreamEvent {
+	if strings.TrimSpace(e.Topic) == "" {
+		e.Topic = topic
+	}
+	if strings.TrimSpace(e.Source) == "" {
+		e.Source = source
+	}
+	if e.Timestamp.IsZero() {
+		e.Timestamp = stamp
+	}
+	return e
 }
 
 // RealtimeHub publishes events to topic subscribers.
@@ -69,8 +84,8 @@ func (h *RealtimeHub) Publish(topic, kind string, payload interface{}, source st
 		Kind:      kind,
 		Payload:   payload,
 		Source:    source,
-		Timestamp: time.Now().UTC(),
 	}
+	event = event.Normalize(topic, source, time.Now().UTC())
 
 	h.mu.Lock()
 	h.history[topic] = append(h.history[topic], event)
@@ -78,13 +93,40 @@ func (h *RealtimeHub) Publish(topic, kind string, payload interface{}, source st
 	h.mu.Unlock()
 
 	for _, ch := range subs {
-		select {
-		case ch <- event:
-		default:
-		}
+		safeSendStreamEvent(ch, event)
 	}
 
 	return event
+}
+
+// PublishBatch emits a group of events to the same topic with a single lock pass.
+func (h *RealtimeHub) PublishBatch(topic, source string, events []StreamEvent) []StreamEvent {
+	if len(events) == 0 {
+		return nil
+	}
+
+	stamp := time.Now().UTC()
+	normalized := make([]StreamEvent, 0, len(events))
+
+	h.mu.Lock()
+	if h.history[topic] == nil {
+		h.history[topic] = make([]StreamEvent, 0, len(events))
+	}
+	subs := h.subscribers[topic]
+	for _, event := range events {
+		event = event.Normalize(topic, source, stamp)
+		normalized = append(normalized, event)
+		h.history[topic] = append(h.history[topic], event)
+	}
+	h.mu.Unlock()
+
+	for _, event := range normalized {
+		for _, ch := range subs {
+			safeSendStreamEvent(ch, event)
+		}
+	}
+
+	return normalized
 }
 
 // Ping publishes a ping event.
@@ -111,3 +153,17 @@ func (h *RealtimeHub) Poll(topic string, limit int) []StreamEvent {
 	return out
 }
 
+func safeSendStreamEvent(ch chan StreamEvent, event StreamEvent) (ok bool) {
+	defer func() {
+		if recover() != nil {
+			ok = false
+		}
+	}()
+
+	select {
+	case ch <- event:
+		return true
+	default:
+		return false
+	}
+}

@@ -18,15 +18,17 @@ func TestParseTarget(t *testing.T) {
 
 func TestLoadManifest(t *testing.T) {
 	dir := t.TempDir()
-	path := filepath.Join(dir, "admin.manifest")
+	path := filepath.Join(dir, "admin.pack")
 
-	content := []byte(`{
-  "name": "admin",
-  "mode": "sw",
-  "module": ".",
-  "entrypoint": "./cmd/server",
-  "paths": ["/admin", "/admin/users"]
-}`)
+	content := []byte(`pack admin
+mode sw
+module .
+entrypoint ./cmd/server
+path /admin
+path /admin/users
+slice /admin - default
+bundle -exe
+`)
 
 	if err := os.WriteFile(path, content, 0o644); err != nil {
 		t.Fatalf("failed to write manifest: %v", err)
@@ -55,5 +57,9 @@ func TestLoadManifest(t *testing.T) {
 
 	if manifest.BuildTarget() != "./cmd/server" {
 		t.Fatalf("expected build target ./cmd/server, got %q", manifest.BuildTarget())
+	}
+
+	if len(manifest.Slices) != 1 {
+		t.Fatalf("expected 1 slice, got %d", len(manifest.Slices))
 	}
 }

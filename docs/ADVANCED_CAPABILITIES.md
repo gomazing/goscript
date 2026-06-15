@@ -2,6 +2,8 @@
 
 This checklist separates what now exists as a foundation in the repo from what still needs full product-grade implementation.
 
+If you want the external AI adoption perspective, see [`docs/AI_ADOPTION_CHECKLIST.md`](./AI_ADOPTION_CHECKLIST.md).
+
 ## 1. Vibe motion system
 
 ### 1.1 Added now
@@ -102,8 +104,11 @@ This checklist separates what now exists as a foundation in the repo from what s
 
 ## 7. Recommended build order
 
-1. Bind `pkg/vibe` into GoUIX and GoScript components
-2. Add `pkg/i18n` integration to routing, rendering, and UI direction
-3. Build a workspace UI layer on top of `pkg/workspace`
-4. Implement inline table views and file browser components
-5. Add collaboration, syncing, and AI editor workflows
+1. Go FAST: remove runtime JSX parsing, lower render allocations, and harden routing/state hot paths
+2. Go PAINT: bind `pkg/vibe` into GoUIX and GoScript components with real canvas / spatial rendering
+3. Go IRT: add realtime event, sync, and collaboration flows for modules and workspaces
+4. Go Jetpack: add deeper profiling, benchmark, and diagnostics loops around render and routing performance
+5. Add `pkg/i18n` integration to routing, rendering, and UI direction
+6. Build a workspace UI layer on top of `pkg/workspace`
+7. Implement inline table views and file browser components
+8. Add collaboration, syncing, and AI editor workflows

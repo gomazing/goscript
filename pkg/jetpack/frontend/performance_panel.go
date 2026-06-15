@@ -1,13 +1,13 @@
 package frontend
 
 import (
-	"encoding/json"
 	"fmt"
 	"html/template"
 	"strings"
 	"time"
 
-	"github.com/davidjeba/goscript/pkg/jetpack/core"
+	"github.com/gomazing/goscript/pkg/jetpack/core"
+	"github.com/gomazing/goscript/pkg/hyper"
 )
 
 // PanelConfig represents the configuration for the performance panel
@@ -245,8 +245,8 @@ func (pp *PerformancePanel) GenerateHTML() (string, error) {
 	
 	data := pp.GetPanelData()
 	
-	// Convert data to JSON for JavaScript
-	dataJSON, err := json.Marshal(data)
+	// Convert data to Hyper for the panel payload
+	dataHyper, err := hyper.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return "", err
 	}
@@ -740,7 +740,7 @@ func (pp *PerformancePanel) GenerateHTML() (string, error) {
 
 <script>
 	// Store panel data
-	const jetpackPanelData = {{.dataJSON}};
+	const jetpackPanelData = {{.dataHyper}};
 	
 	// Panel functions
 	function jetpackHidePanel() {
@@ -857,7 +857,7 @@ func (pp *PerformancePanel) GenerateHTML() (string, error) {
 		"selected_metrics": data["selected_metrics"],
 		"available_metrics": data["available_metrics"],
 		"Config":           pp.Config,
-		"dataJSON":         template.JS(string(dataJSON)),
+		"dataHyper":        template.HTML(string(dataHyper)),
 	})
 	if err != nil {
 		return "", err
@@ -892,8 +892,8 @@ func (pp *PerformancePanel) InjectIntoHTML(html string) (string, error) {
 func (pp *PerformancePanel) GenerateExtensionHTML() (string, error) {
 	data := pp.GetPanelData()
 	
-	// Convert data to JSON for JavaScript
-	dataJSON, err := json.Marshal(data)
+	// Convert data to Hyper for the extension payload
+	dataHyper, err := hyper.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return "", err
 	}
@@ -1618,7 +1618,7 @@ func (pp *PerformancePanel) GenerateExtensionHTML() (string, error) {
 	
 	<script>
 		// Store panel data
-		const jetpackPanelData = {{.dataJSON}};
+		const jetpackPanelData = {{.dataHyper}};
 		
 		// Tab switching
 		document.querySelectorAll('.tab').forEach(tab => {
@@ -1674,7 +1674,7 @@ func (pp *PerformancePanel) GenerateExtensionHTML() (string, error) {
 		"available_metrics": data["available_metrics"],
 		"last_update":      pp.LastUpdate.Format(time.RFC1123),
 		"Config":           pp.Config,
-		"dataJSON":         template.JS(string(dataJSON)),
+		"dataHyper":        template.HTML(string(dataHyper)),
 	})
 	if err != nil {
 		return "", err

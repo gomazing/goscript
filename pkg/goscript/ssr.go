@@ -10,14 +10,16 @@ func NewSSREngine(store *Store) *SSREngine {
 
 func (ssr *SSREngine) RenderToString(component Component) (string, error) {
 	rendered := component.Render()
-	state := map[string]interface{}{}
+	var state interface{}
 	if ssr != nil && ssr.store != nil {
-		state = ssr.store.state
+		state = ssr.store.Snapshot()
 	}
 
 	renderedShell, err := RenderHydrationShell(rendered, HydrationPayload{
 		AppID:   "app",
 		Version: "go-script",
+		Title:   "GoScript App",
+		RootID:  "app",
 		State:   state,
 	})
 	if err != nil {

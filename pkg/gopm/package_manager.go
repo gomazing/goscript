@@ -272,6 +272,8 @@ func (pm *PackageManager) Help(args []string) {
 	if len(args) == 0 {
 		fmt.Println("Usage: gopm [command] [options]")
 		fmt.Println("Run 'gopm help <command>' for more information on a specific command.")
+		fmt.Println("Use 'gopm manifest' to inspect or scaffold the package manifest.")
+		fmt.Println("Use 'gopm lock' to generate a lockfile from the manifest.")
 		return
 	}
 
@@ -288,6 +290,10 @@ func (pm *PackageManager) Help(args []string) {
 		fmt.Println("Options:")
 		fmt.Println("  --latest       Update to latest version")
 		fmt.Println("  --global       Update global packages")
+	case "manifest":
+		fmt.Println("gopm manifest [path] - Inspect or scaffold the project package manifest")
+	case "lock":
+		fmt.Println("gopm lock [path] - Generate a lockfile from the project manifest")
 	default:
 		fmt.Printf("No help available for %s\n", command)
 	}
@@ -316,6 +322,7 @@ func (pm *PackageManager) Setup(args []string) {
 	fmt.Printf("Project scaffolded in %s\n", opts.ProjectDir)
 	fmt.Printf("Mode: %s\n", opts.Mode)
 	fmt.Printf("Type: %s\n", opts.Type)
+	fmt.Printf("Package manifest: %s\n", filepath.Join(opts.ProjectDir, "gopm.hyper"))
 	fmt.Printf("Manifest: %s\n", manifestPath)
 }
 

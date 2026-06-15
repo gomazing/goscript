@@ -1,9 +1,9 @@
 package gocsx
 
 import (
-	"github.com/davidjeba/goscript/pkg/gocsx/components"
-	"github.com/davidjeba/goscript/pkg/gocsx/core"
-	"github.com/davidjeba/goscript/pkg/gocsx/platforms/web"
+	"github.com/gomazing/goscript/pkg/gocsx/components"
+	"github.com/gomazing/goscript/pkg/gocsx/core"
+	"github.com/gomazing/goscript/pkg/gocsx/platforms/web"
 )
 
 // Gocsx is the main entry point for the Gocsx framework

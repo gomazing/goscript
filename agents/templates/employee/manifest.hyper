@@ -1,0 +1,10 @@
+<agent kind="employee">
+  <role>employee</role>
+  <active>true</active>
+  <permissions>
+    <item></item>
+  </permissions>
+  <reportsTo></reportsTo>
+  <brain>brain.md</brain>
+  <skills>skills.md</skills>
+</agent>

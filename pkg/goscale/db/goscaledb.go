@@ -3,12 +3,13 @@ package db
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"reflect"
 	"sync"
 	"time"
+
+	"github.com/gomazing/goscript/pkg/hyper"
 )
 
 // GoScaleDB is a high-performance database that combines features of
@@ -350,12 +351,12 @@ func (db *GoScaleDB) Query(ctx context.Context, query string, args ...interface{
 			// Handle different types
 			switch v := val.(type) {
 			case []byte:
-				// Try to unmarshal as JSON first
-				var jsonVal interface{}
-				if err := json.Unmarshal(v, &jsonVal); err == nil {
-					row[col] = jsonVal
+				// Try to unmarshal as Hyper first
+				var hyperVal interface{}
+				if err := hyper.Unmarshal(v, &hyperVal); err == nil {
+					row[col] = hyperVal
 				} else {
-					// If not JSON, use as string
+					// If not Hyper, use as string
 					row[col] = string(v)
 				}
 			default:

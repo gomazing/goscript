@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/davidjeba/goscript/pkg/goscript"
-	"github.com/davidjeba/goscript/pkg/components"
+	"github.com/gomazing/goscript/pkg/goscript"
+	"github.com/gomazing/goscript/pkg/components"
 )
 
 // Handler - Vercel serverless function entry point
@@ -29,4 +29,3 @@ func helloHandler(w http.ResponseWriter, r *http.Request, params map[string]stri
 	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(`{"message": "Hello from GoScript API!"}`))
 }
-

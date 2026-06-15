@@ -37,6 +37,8 @@ type Scheduler struct {
 	stop    chan struct{}
 	once    sync.Once
 	wg      sync.WaitGroup
+	mu      sync.RWMutex
+	ctx     context.Context
 }
 
 // NewScheduler creates a scheduler with a worker count.
@@ -50,11 +52,20 @@ func NewScheduler(workers int) *Scheduler {
 		tasks:   make(chan Task, workers*4),
 		results: make(chan TaskResult, workers*4),
 		stop:    make(chan struct{}),
+		ctx:     context.Background(),
 	}
 }
 
 // Start begins worker processing.
 func (s *Scheduler) Start(ctx context.Context) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	s.mu.Lock()
+	s.ctx = ctx
+	s.mu.Unlock()
+
 	for i := 0; i < s.workers; i++ {
 		s.wg.Add(1)
 		go s.worker(ctx)
@@ -71,7 +82,16 @@ func (s *Scheduler) Submit(task Task) error {
 		task.ID = fmt.Sprintf("task-%d", time.Now().UnixNano())
 	}
 
+	s.mu.RLock()
+	ctx := s.ctx
+	s.mu.RUnlock()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	select {
+	case <-ctx.Done():
+		return ctx.Err()
 	case <-s.stop:
 		return fmt.Errorf("scheduler is stopped")
 	case s.tasks <- task:
@@ -124,4 +144,3 @@ func (s *Scheduler) worker(ctx context.Context) {
 		}
 	}
 }
-

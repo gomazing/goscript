@@ -3,6 +3,7 @@ package goscript
 import (
 	"fmt"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -16,6 +17,11 @@ type ModuleSpec struct {
 	Description  string            `json:"description,omitempty"`
 	Dependencies map[string]string `json:"dependencies,omitempty"`
 	Exports      []string          `json:"exports,omitempty"`
+	Entrypoints   []string          `json:"entrypoints,omitempty"`
+	Capabilities  []string          `json:"capabilities,omitempty"`
+	Tags          []string          `json:"tags,omitempty"`
+	Runtime       string            `json:"runtime,omitempty"`
+	Strict        bool              `json:"strict,omitempty"`
 	Metadata     map[string]string `json:"metadata,omitempty"`
 }
 
@@ -39,6 +45,10 @@ func (m *ModuleSpec) Normalize() {
 
 	if m.Metadata == nil {
 		m.Metadata = map[string]string{}
+	}
+
+	if len(m.Entrypoints) == 0 && m.Main != "" {
+		m.Entrypoints = []string{m.Main}
 	}
 }
 
@@ -100,7 +110,23 @@ func (r *ModuleRegistry) List() []ModuleSpec {
 	for _, spec := range r.modules {
 		out = append(out, spec)
 	}
+	sort.SliceStable(out, func(i, j int) bool {
+		return out[i].Name < out[j].Name
+	})
 	return out
+}
+
+// Names returns the registered module names in sorted order.
+func (r *ModuleRegistry) Names() []string {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	names := make([]string, 0, len(r.modules))
+	for name := range r.modules {
+		names = append(names, name)
+	}
+	sort.Strings(names)
+	return names
 }
 
 // Resolve tries to locate a module by name or by path fragment.
@@ -127,4 +153,3 @@ func (r *ModuleRegistry) Resolve(target string) (ModuleSpec, bool) {
 
 // GlobalModuleRegistry is a shared registry for runtime discovery.
 var GlobalModuleRegistry = NewModuleRegistry()
-

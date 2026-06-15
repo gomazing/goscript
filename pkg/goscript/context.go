@@ -1,7 +1,6 @@
 package goscript
 
 import (
-        "strings"
         "sync"
 )
 
@@ -52,11 +51,7 @@ func CreateProvider(context *Context, key string, value interface{}) FunctionalC
                 context.Set(key, value)
                 
                 // Render children
-                var result strings.Builder
-                for _, child := range children {
-                        result.WriteString(renderChild(child))
-                }
-                return result.String()
+                return renderChildren(children, false)
         }
 }
 
@@ -108,11 +103,7 @@ func (p *ContextProvider) Render() string {
         p.context.Set(p.key, p.value)
         
         // Render children
-        var result strings.Builder
-        for _, child := range p.GetChildren() {
-                result.WriteString(renderChild(child))
-        }
-        return result.String()
+        return renderChildren(p.GetChildren(), false)
 }
 
 // ComponentDidMount implements the LifecycleComponent interface

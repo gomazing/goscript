@@ -53,8 +53,9 @@ func (r *ComponentRegistry) UpdateComponent(id string, props Props) bool {
 	
 	if component, exists := r.components[id]; exists {
 		if component.ShouldComponentUpdate(props) {
-			// In a real implementation, we would update the props here
-			// and trigger a re-render
+			if updater, ok := component.(interface{ SetProps(Props) }); ok {
+				updater.SetProps(props)
+			}
 			return true
 		}
 	}

@@ -1,6 +1,6 @@
-# Gocsx - A Comprehensive CSS Framework for Go
+# Gocsx - GoScript Styling Layer for Go
 
-Gocsx (pronounced "gosix") is a powerful, utility-first CSS framework for Go that enables developers to build beautiful, responsive interfaces for web, mobile, and AR/VR applications. Drawing inspiration from Tailwind CSS but extending far beyond its capabilities, Gocsx provides a unified styling approach across multiple platforms.
+Gocsx (pronounced "gosix") is a powerful, utility-first styling layer for GoScript that enables developers to build beautiful, responsive interfaces for web, mobile, and AR/VR applications. Drawing inspiration from Tailwind CSS but extending far beyond its capabilities, Gocsx provides a unified styling approach across multiple platforms.
 
 ![Gocsx Logo](https://via.placeholder.com/800x400?text=Gocsx)
 
@@ -9,7 +9,7 @@ Gocsx (pronounced "gosix") is a powerful, utility-first CSS framework for Go tha
 ### Core Features
 
 - **Utility-First Approach**: Build complex designs without leaving your Go code
-- **Cross-Platform Support**: One framework for web, mobile, and AR/VR applications
+- **Cross-Platform Support**: One styling layer for web, mobile, and AR/VR applications
 - **Type-Safe Styling**: Leverage Go's type system for safer styling
 - **Component System**: Pre-built, customizable components
 - **Responsive Design**: Built-in responsive utilities
@@ -45,7 +45,7 @@ Gocsx (pronounced "gosix") is a powerful, utility-first CSS framework for Go tha
 ## Installation
 
 ```bash
-go get github.com/davidjeba/goscript/pkg/gocsx
+go get github.com/gomazing/goscript/pkg/gocsx
 ```
 
 ## Quick Start
@@ -57,8 +57,8 @@ package main
 
 import (
     "fmt"
-    "github.com/davidjeba/goscript/pkg/gocsx"
-    "github.com/davidjeba/goscript/pkg/gocsx/components"
+    "github.com/gomazing/goscript/pkg/gocsx"
+    "github.com/gomazing/goscript/pkg/gocsx/components"
 )
 
 func main() {
@@ -92,8 +92,8 @@ import (
     "fmt"
     "log"
     "net/http"
-    "github.com/davidjeba/goscript/pkg/gocsx"
-    "github.com/davidjeba/goscript/pkg/gocsx/components"
+    "github.com/gomazing/goscript/pkg/gocsx"
+    "github.com/gomazing/goscript/pkg/gocsx/components"
 )
 
 func main() {
@@ -113,7 +113,7 @@ func main() {
     card := g.Card(components.CardProps{
         ID:        "my-card",
         Title:     "Gocsx Card",
-        Subtitle:  "A powerful CSS framework for Go",
+        Subtitle:  "A powerful styling layer for Go",
         Body:      "This is a card component built with Gocsx.",
         Footer:    "Footer content",
         ClassName: "shadow",
@@ -181,7 +181,7 @@ button := g.Button(components.ButtonProps{
 card := g.Card(components.CardProps{
     ID:        "my-card",
     Title:     "Gocsx Card",
-    Subtitle:  "A powerful CSS framework for Go",
+    Subtitle:  "A powerful styling layer for Go",
     Body:      "This is a card component built with Gocsx.",
     Footer:    "Footer content",
     Image:     "https://example.com/image.jpg",
@@ -393,7 +393,7 @@ Gocsx is written entirely in Go, allowing you to build full-stack applications w
 
 ### Cross-Platform
 
-Unlike most CSS frameworks that are web-only, Gocsx is designed to work across web, mobile, and AR/VR platforms.
+Unlike most CSS systems that are web-only, Gocsx is designed to work across web, mobile, and AR/VR platforms.
 
 ### Type Safety
 
@@ -405,13 +405,13 @@ Gocsx generates optimized CSS with minimal overhead, resulting in faster load ti
 
 ### Developer Experience
 
-Gocsx provides a familiar API for developers coming from other CSS frameworks like Tailwind, Bootstrap, or Material UI.
+Gocsx provides a familiar API for developers coming from other CSS systems like Tailwind, Bootstrap, or Material UI.
 
-## Comparison with Other Frameworks
+## Comparison with Other Styling Systems
 
 ### Gocsx vs Tailwind CSS
 
-- **Language**: Gocsx uses Go, Tailwind uses JavaScript/CSS
+- **Language**: Gocsx uses Go, Tailwind uses the legacy browser stack/CSS
 - **Platforms**: Gocsx supports web, mobile, and AR/VR, Tailwind is web-only
 - **Type Safety**: Gocsx has type safety, Tailwind does not
 - **Components**: Gocsx has built-in components, Tailwind requires additional libraries
@@ -423,12 +423,12 @@ Gocsx provides a familiar API for developers coming from other CSS frameworks li
 - **Size**: Gocsx generates only the CSS you need, Bootstrap includes everything
 - **Customization**: Gocsx has more granular customization options
 - **Platforms**: Gocsx supports multiple platforms, Bootstrap is web-only
-- **Language**: Gocsx uses Go, Bootstrap uses JavaScript/CSS
+- **Language**: Gocsx uses Go, Bootstrap uses the legacy browser stack/CSS
 
 ### Gocsx vs Material UI
 
-- **Design System**: Gocsx is framework-agnostic, Material UI follows Google's Material Design
-- **Language**: Gocsx uses Go, Material UI uses JavaScript/React
+- **Design System**: Gocsx is system-agnostic, Material UI follows Google's Material Design
+- **Language**: Gocsx uses Go, Material UI uses the legacy browser stack/React
 - **Platforms**: Gocsx supports multiple platforms, Material UI is web-focused
 - **Customization**: Both have powerful customization options
 - **Components**: Both have rich component libraries
@@ -439,4 +439,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT License
+Apache License, Version 2.0

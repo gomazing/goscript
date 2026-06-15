@@ -43,7 +43,7 @@ The edge computing system provides:
 ### Installation
 
 ```bash
-go get github.com/davidjeba/goscript/pkg/goscale
+go get github.com/gomazing/goscript/pkg/goscale
 ```
 
 ### Basic Usage
@@ -59,7 +59,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/davidjeba/goscript/pkg/goscale/api"
+	"github.com/gomazing/goscript/pkg/goscale/api"
 )
 
 func main() {
@@ -123,7 +123,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/davidjeba/goscript/pkg/goscale/db"
+	"github.com/gomazing/goscript/pkg/goscale/db"
 )
 
 func main() {
@@ -223,9 +223,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/davidjeba/goscript/pkg/goscale/api"
-	"github.com/davidjeba/goscript/pkg/goscale/db"
-	"github.com/davidjeba/goscript/pkg/goscale/edge"
+	"github.com/gomazing/goscript/pkg/goscale/api"
+	"github.com/gomazing/goscript/pkg/goscale/db"
+	"github.com/gomazing/goscript/pkg/goscale/edge"
 )
 
 func main() {
@@ -342,7 +342,7 @@ GoScale is designed for high performance:
 - **Performance**: Both offer high performance, but GoScale includes additional optimizations
 - **Flexibility**: GoScale offers GraphQL-like flexibility, while gRPC is more rigid
 - **Edge Computing**: GoScale includes built-in edge computing support
-- **Protocol**: GoScale uses HTTP/JSON, while gRPC uses HTTP/2 and Protocol Buffers
+- **Protocol**: GoScale uses HTTP/Hyper, while gRPC uses HTTP/2 and Protocol Buffers
 - **Code Generation**: gRPC requires code generation, while GoScale uses runtime reflection
 
 ### GoScale DB vs PostgreSQL
@@ -367,4 +367,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT License
+Apache License, Version 2.0

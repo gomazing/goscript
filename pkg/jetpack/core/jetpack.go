@@ -1,10 +1,11 @@
 package core
 
 import (
-	"encoding/json"
 	"fmt"
 	"sync"
 	"time"
+
+	"github.com/gomazing/goscript/pkg/hyper"
 )
 
 // MetricType defines the type of metric being tracked
@@ -342,8 +343,8 @@ func (jp *Jetpack) ExportMetrics() error {
 	defer jp.mutex.RUnlock()
 	
 	// In a real implementation, this would send metrics to the endpoint
-	// For now, we'll just serialize to JSON
-	data, err := json.Marshal(jp.Metrics)
+	// For now, we'll just serialize to Hyper
+	data, err := hyper.MarshalIndent(jp.Metrics, "", "  ")
 	if err != nil {
 		return err
 	}

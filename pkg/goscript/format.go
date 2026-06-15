@@ -1,6 +1,9 @@
 package goscript
 
-import "strings"
+import (
+	"path/filepath"
+	"strings"
+)
 
 // FormatScript normalizes line endings and trims trailing spaces.
 func FormatScript(input string) string {
@@ -18,3 +21,12 @@ func FormatMarkup(input string) string {
 	return input
 }
 
+// FormatFile applies a best-effort formatter based on file extension.
+func FormatFile(path, input string) string {
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".html", ".htm", ".gsx", ".xml", ".svg":
+		return FormatMarkup(input)
+	default:
+		return FormatScript(input)
+	}
+}

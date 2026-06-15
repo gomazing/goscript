@@ -3,7 +3,7 @@ package web
 import (
 	"strings"
 
-	"github.com/davidjeba/goscript/pkg/gocsx/core"
+	"github.com/gomazing/goscript/pkg/gocsx/core"
 )
 
 // WebAdapter is a platform adapter for web

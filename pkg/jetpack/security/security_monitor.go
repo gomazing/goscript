@@ -2,14 +2,14 @@ package security
 
 import (
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/davidjeba/goscript/pkg/jetpack/core"
+	"github.com/gomazing/goscript/pkg/jetpack/core"
+	"github.com/gomazing/goscript/pkg/hyper"
 )
 
 // SecurityLevel defines the security level
@@ -90,7 +90,7 @@ func NewSecurityMonitor(jetpack *core.Jetpack) *SecurityMonitor {
 			ScanInterval:           time.Hour,
 			AlertThreshold:         SecurityLevelMedium,
 			AutoFix:                false,
-			ReportPath:             "security_report.json",
+			ReportPath:             "security_report.hyper",
 			ExcludePaths:           []string{"/assets/", "/public/"},
 		},
 		Vulnerabilities:     make(map[string]*Vulnerability),
@@ -245,7 +245,7 @@ func (sm *SecurityMonitor) ScanVulnerabilities() {
 			Type:        VulnOutdatedLibrary,
 			Level:       SecurityLevelHigh,
 			Description: "Using outdated library with known vulnerabilities",
-			Location:    "package.json",
+			Location:    "package.hyper",
 			Timestamp:   time.Now(),
 			Remediation: "Update the library to the latest version",
 			References:  []string{"https://nvd.nist.gov/vuln/detail/CVE-2021-12345"},
@@ -471,8 +471,8 @@ func (sm *SecurityMonitor) GenerateReport() (string, error) {
 		report["security_score"] = securityScore
 	}
 	
-	// Convert to JSON
-	data, err := json.MarshalIndent(report, "", "  ")
+	// Convert to Hyper
+	data, err := hyper.MarshalIndent(report, "", "  ")
 	if err != nil {
 		return "", err
 	}
