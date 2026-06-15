@@ -77,6 +77,81 @@ func TestRealtimeHub(t *testing.T) {
 	}
 }
 
+func TestRealtimeHubUnsubscribeThenPublish(t *testing.T) {
+	hub := NewRealtimeHub(1)
+	sub := hub.Subscribe("system", "listener-1")
+	hub.Unsubscribe("system", "listener-1")
+
+	select {
+	case <-sub:
+	default:
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			t.Fatalf("publish should not panic after unsubscribe: %v", r)
+		}
+	}()
+
+	hub.Publish("system", "ping", map[string]interface{}{"alive": true}, "unit-test")
+}
+
+func TestRealtimeHubPublishBatch(t *testing.T) {
+	hub := NewRealtimeHub(4)
+	sub := hub.Subscribe("sheet", "listener-1")
+	defer hub.Unsubscribe("sheet", "listener-1")
+
+	events := hub.PublishBatch("sheet", "unit-test", []StreamEvent{
+		{Kind: "cell", Payload: map[string]string{"cell": "A1"}},
+		{Kind: "cell", Payload: map[string]string{"cell": "B1"}},
+	})
+	if len(events) != 2 {
+		t.Fatalf("expected two normalized events, got %d", len(events))
+	}
+
+	for i := 0; i < 2; i++ {
+		select {
+		case event := <-sub:
+			if event.Topic != "sheet" || event.Source != "unit-test" {
+				t.Fatalf("unexpected batch event: %+v", event)
+			}
+		case <-time.After(2 * time.Second):
+			t.Fatalf("timed out waiting for batch event %d", i)
+		}
+	}
+}
+
+func BenchmarkRealtimeHubPublishBatch(b *testing.B) {
+	hub := NewRealtimeHub(64)
+	sub := hub.Subscribe("sheet", "listener-1")
+	defer hub.Unsubscribe("sheet", "listener-1")
+
+	batch := make([]StreamEvent, 0, 32)
+	for i := 0; i < 32; i++ {
+		batch = append(batch, StreamEvent{
+			Kind:    "cell",
+			Payload: map[string]string{"cell": "A1"},
+		})
+	}
+
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		published := hub.PublishBatch("sheet", "bench", batch)
+		if len(published) != len(batch) {
+			b.Fatalf("expected %d published events, got %d", len(batch), len(published))
+		}
+		for j := 0; j < len(batch); j++ {
+			select {
+			case <-sub:
+			default:
+				b.Fatalf("expected subscriber event %d", j)
+			}
+		}
+	}
+}
+
 func TestInferenceRouter(t *testing.T) {
 	router := NewInferenceRouter(
 		fakeProvider{label: "local"},
@@ -108,4 +183,3 @@ func (f fakeProvider) Infer(ctx context.Context, request InferenceRequest) (Infe
 		Provider: f.label,
 	}, nil
 }
-

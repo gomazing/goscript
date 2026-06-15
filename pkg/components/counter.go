@@ -3,7 +3,7 @@ package components
 import (
         "fmt"
 
-        "github.com/davidjeba/goscript/pkg/goscript"
+        "github.com/gomazing/goscript/pkg/goscript"
 )
 
 // CounterProps defines the props for the Counter component

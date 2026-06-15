@@ -3,7 +3,7 @@ package components
 import (
         "fmt"
         
-        "github.com/davidjeba/goscript/pkg/gouix"
+        "github.com/gomazing/goscript/pkg/gouix"
 )
 
 // GoUIXHomePage is the home page component

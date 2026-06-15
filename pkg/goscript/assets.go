@@ -2,7 +2,7 @@ package goscript
 
 import (
 	"net/http"
-	"path/filepath"
+	"path"
 )
 
 type AssetManager struct {
@@ -16,7 +16,7 @@ func NewAssetManager(assetDir string) *AssetManager {
 func (am *AssetManager) ServeAssets(prefix string) http.HandlerFunc {
 	fs := http.FileServer(http.Dir(am.assetDir))
 	return func(w http.ResponseWriter, r *http.Request) {
-		r.URL.Path = filepath.Join(prefix, r.URL.Path)
+		r.URL.Path = path.Join(prefix, r.URL.Path)
 		fs.ServeHTTP(w, r)
 	}
 }

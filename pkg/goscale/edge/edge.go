@@ -2,14 +2,14 @@ package edge
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"sync"
 	"time"
 
-	"github.com/davidjeba/goscript/pkg/goscale/api"
-	"github.com/davidjeba/goscript/pkg/goscale/db"
+	"github.com/gomazing/goscript/pkg/goscale/api"
+	"github.com/gomazing/goscript/pkg/goscale/db"
+	"github.com/gomazing/goscript/pkg/hyper"
 )
 
 // EdgeNode represents an edge computing node that can process API requests
@@ -307,7 +307,7 @@ func (n *EdgeNode) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		Params     map[string]interface{} `json:"params"`
 	}
 	
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+	if err := hyper.NewDecoder(r.Body).Decode(&request); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -325,10 +325,13 @@ func (n *EdgeNode) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	
 	// Return the result
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
+	w.Header().Set("Content-Type", "application/hyper")
+	if err := hyper.NewEncoder(w).Encode(map[string]interface{}{
 		"data": result,
-	})
+	}); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	
 	n.updateMetrics(startTime, true, false)
 }

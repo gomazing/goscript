@@ -1,11 +1,11 @@
 package frontend
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 
-	"github.com/davidjeba/goscript/pkg/jetpack/core"
+	"github.com/gomazing/goscript/pkg/jetpack/core"
+	"github.com/gomazing/goscript/pkg/hyper"
 )
 
 // LighthouseConfig represents the configuration for Lighthouse integration
@@ -256,9 +256,9 @@ func (lm *LighthouseMonitor) GetLatestResult() *LighthouseResult {
 	return lm.Results[len(lm.Results)-1]
 }
 
-// ExportResultToJSON exports a Lighthouse result to JSON
-func (lm *LighthouseMonitor) ExportResultToJSON(result *LighthouseResult) (string, error) {
-	data, err := json.MarshalIndent(result, "", "  ")
+// ExportResultToHyper exports a Lighthouse result to Hyper
+func (lm *LighthouseMonitor) ExportResultToHyper(result *LighthouseResult) (string, error) {
+	data, err := hyper.MarshalIndent(result, "", "  ")
 	if err != nil {
 		return "", err
 	}

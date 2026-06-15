@@ -1,9 +1,0 @@
-{
-  "role": "employee",
-  "active": true,
-  "permissions": [],
-  "reportsTo": "",
-  "brain": "brain.md",
-  "skills": "skills.md"
-}
-

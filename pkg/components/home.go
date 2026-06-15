@@ -1,7 +1,7 @@
 package components
 
 import (
-        "github.com/davidjeba/goscript/pkg/goscript"
+        "github.com/gomazing/goscript/pkg/goscript"
 )
 
 // Home is the main page component

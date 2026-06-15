@@ -56,27 +56,40 @@ func (b *Builder) Build(manifestPath string, target Target) (BuildResult, error)
 		return BuildResult{}, err
 	}
 
-	plan := manifest.Plan(manifestPath, target, distDir)
-	if err := writeJSONFile(filepath.Join(artifactRoot, "build-plan.json"), plan); err != nil {
+	slice, err := manifest.ResolveSlice(moduleRoot)
+	if err != nil {
 		return BuildResult{}, err
 	}
-	if err := writeJSONFile(filepath.Join(artifactRoot, "manifest.normalized.json"), manifest); err != nil {
+	slice.ManifestPath = manifestPath
+	slice.ModuleRoot = moduleRoot
+
+	plan := manifest.Plan(manifestPath, target, distDir)
+	plan.Slice = slice
+	plan.Notes = append(plan.Notes, "inspect export-slice.hyper for the resolved file set")
+	if err := writeHyperFile(filepath.Join(artifactRoot, "build-plan.hyper"), plan); err != nil {
+		return BuildResult{}, err
+	}
+	if err := writeHyperFile(filepath.Join(artifactRoot, "pack.normalized.hyper"), manifest); err != nil {
+		return BuildResult{}, err
+	}
+	slicePath := filepath.Join(artifactRoot, "export-slice.hyper")
+	if err := writeHyperFile(slicePath, slice); err != nil {
 		return BuildResult{}, err
 	}
 
 	switch target {
 	case TargetEXE:
-		return b.buildExecutable(manifestPath, manifest, target, moduleRoot, artifactRoot)
+		return b.buildExecutable(manifestPath, manifest, target, moduleRoot, artifactRoot, slicePath)
 	case TargetGOE:
-		return b.buildGOE(manifestPath, manifest, target, moduleRoot, artifactRoot, plan)
+		return b.buildGOE(manifestPath, manifest, target, moduleRoot, artifactRoot, slicePath, plan, slice)
 	case TargetAPK, TargetIPA, TargetDMG:
-		return b.scaffoldPlatformBundle(manifestPath, manifest, target, artifactRoot)
+		return b.scaffoldPlatformBundle(manifestPath, manifest, target, artifactRoot, slicePath, slice)
 	default:
 		return BuildResult{}, fmt.Errorf("unsupported target %q", target)
 	}
 }
 
-func (b *Builder) buildExecutable(manifestPath string, manifest Manifest, target Target, moduleRoot, artifactRoot string) (BuildResult, error) {
+func (b *Builder) buildExecutable(manifestPath string, manifest Manifest, target Target, moduleRoot, artifactRoot, slicePath string) (BuildResult, error) {
 	outputPath := filepath.Join(artifactRoot, manifest.BinaryName())
 	if b.DryRun {
 		return BuildResult{
@@ -87,7 +100,12 @@ func (b *Builder) buildExecutable(manifestPath string, manifest Manifest, target
 			Status:       "dry-run",
 			Message:      "dry run complete; executable not built",
 			OutputPath:   outputPath,
-			Artifacts:    []string{filepath.Join(artifactRoot, "build-plan.json"), filepath.Join(artifactRoot, "manifest.normalized.json")},
+			SlicePath:    slicePath,
+			Artifacts: []string{
+				filepath.Join(artifactRoot, "build-plan.hyper"),
+				filepath.Join(artifactRoot, "pack.normalized.hyper"),
+				slicePath,
+			},
 		}, nil
 	}
 
@@ -103,15 +121,17 @@ func (b *Builder) buildExecutable(manifestPath string, manifest Manifest, target
 		Status:       "built",
 		Message:      "executable built successfully",
 		OutputPath:   outputPath,
+		SlicePath:    slicePath,
 		Artifacts: []string{
 			outputPath,
-			filepath.Join(artifactRoot, "build-plan.json"),
-			filepath.Join(artifactRoot, "manifest.normalized.json"),
+			filepath.Join(artifactRoot, "build-plan.hyper"),
+			filepath.Join(artifactRoot, "pack.normalized.hyper"),
+			slicePath,
 		},
 	}, nil
 }
 
-func (b *Builder) buildGOE(manifestPath string, manifest Manifest, target Target, moduleRoot, artifactRoot string, plan BuildPlan) (BuildResult, error) {
+func (b *Builder) buildGOE(manifestPath string, manifest Manifest, target Target, moduleRoot, artifactRoot, slicePath string, plan BuildPlan, slice ExportSlice) (BuildResult, error) {
 	tempDir, err := os.MkdirTemp("", "bo-goe-*")
 	if err != nil {
 		return BuildResult{}, err
@@ -132,6 +152,7 @@ func (b *Builder) buildGOE(manifestPath string, manifest Manifest, target Target
 			Status:       "dry-run",
 			Message:      "dry run complete; GOE bundle not built",
 			OutputPath:   binaryPath,
+			SlicePath:    slicePath,
 		}, nil
 	}
 
@@ -140,7 +161,7 @@ func (b *Builder) buildGOE(manifestPath string, manifest Manifest, target Target
 	}
 
 	bundlePath := filepath.Join(artifactRoot, manifest.Output+".goe")
-	if err := b.writeGOEBundle(bundlePath, manifestPath, manifest, binaryPath, plan); err != nil {
+	if err := b.writeGOEBundle(bundlePath, manifestPath, manifest, binaryPath, plan, slice); err != nil {
 		return BuildResult{}, err
 	}
 
@@ -153,15 +174,17 @@ func (b *Builder) buildGOE(manifestPath string, manifest Manifest, target Target
 		Message:      "goe bundle created successfully",
 		OutputPath:   binaryPath,
 		BundlePath:   bundlePath,
+		SlicePath:    slicePath,
 		Artifacts: []string{
 			bundlePath,
-			filepath.Join(artifactRoot, "build-plan.json"),
-			filepath.Join(artifactRoot, "manifest.normalized.json"),
+			filepath.Join(artifactRoot, "build-plan.hyper"),
+			filepath.Join(artifactRoot, "pack.normalized.hyper"),
+			slicePath,
 		},
 	}, nil
 }
 
-func (b *Builder) scaffoldPlatformBundle(manifestPath string, manifest Manifest, target Target, artifactRoot string) (BuildResult, error) {
+func (b *Builder) scaffoldPlatformBundle(manifestPath string, manifest Manifest, target Target, artifactRoot, slicePath string, slice ExportSlice) (BuildResult, error) {
 	platformRoot := filepath.Join(artifactRoot, strings.ToLower(string(target)))
 	if err := os.MkdirAll(platformRoot, 0o755); err != nil {
 		return BuildResult{}, err
@@ -181,7 +204,10 @@ func (b *Builder) scaffoldPlatformBundle(manifestPath string, manifest Manifest,
 	if err := os.WriteFile(filepath.Join(platformRoot, "README.txt"), []byte(readme), 0o644); err != nil {
 		return BuildResult{}, err
 	}
-	if err := writeJSONFile(filepath.Join(platformRoot, "manifest.json"), manifest); err != nil {
+	if err := writeHyperFile(filepath.Join(platformRoot, "pack.hyper"), manifest); err != nil {
+		return BuildResult{}, err
+	}
+	if err := writeHyperFile(filepath.Join(platformRoot, "slice.hyper"), slice); err != nil {
 		return BuildResult{}, err
 	}
 
@@ -193,10 +219,12 @@ func (b *Builder) scaffoldPlatformBundle(manifestPath string, manifest Manifest,
 		Status:       "scaffolded",
 		Message:      fmt.Sprintf("%s scaffold generated; native packaging can be layered on later", strings.ToUpper(string(target))),
 		OutputPath:   platformRoot,
+		SlicePath:    slicePath,
 		Artifacts: []string{
 			platformRoot,
-			filepath.Join(artifactRoot, "build-plan.json"),
-			filepath.Join(artifactRoot, "manifest.normalized.json"),
+			filepath.Join(artifactRoot, "build-plan.hyper"),
+			filepath.Join(artifactRoot, "pack.normalized.hyper"),
+			slicePath,
 		},
 	}, nil
 }
@@ -216,7 +244,7 @@ func (b *Builder) runGoBuild(workDir, buildTarget, outputPath string) error {
 	return cmd.Run()
 }
 
-func (b *Builder) writeGOEBundle(bundlePath, manifestPath string, manifest Manifest, binaryPath string, plan BuildPlan) error {
+func (b *Builder) writeGOEBundle(bundlePath, manifestPath string, manifest Manifest, binaryPath string, plan BuildPlan, slice ExportSlice) error {
 	if err := os.MkdirAll(filepath.Dir(bundlePath), 0o755); err != nil {
 		return err
 	}
@@ -230,12 +258,15 @@ func (b *Builder) writeGOEBundle(bundlePath, manifestPath string, manifest Manif
 	zipWriter := zip.NewWriter(file)
 	defer zipWriter.Close()
 
-	if err := addFileToZip(zipWriter, "manifest.json", mustMarshal(manifest)); err != nil {
+	if err := addFileToZip(zipWriter, "pack.hyper", mustMarshalHyper(manifest)); err != nil {
 		return err
 	}
 
-	plan.Notes = []string{"portable GOE bundle with embedded binary and manifest"}
-	if err := addFileToZip(zipWriter, "build-plan.json", mustMarshal(plan)); err != nil {
+	plan.Notes = append(plan.Notes, "portable GOE bundle with embedded binary and manifest")
+	if err := addFileToZip(zipWriter, "build-plan.hyper", mustMarshalHyper(plan)); err != nil {
+		return err
+	}
+	if err := addFileToZip(zipWriter, "slice.hyper", mustMarshalHyper(slice)); err != nil {
 		return err
 	}
 
@@ -245,12 +276,14 @@ func (b *Builder) writeGOEBundle(bundlePath, manifestPath string, manifest Manif
 
 	runtimeNote := fmt.Sprintf(
 		"GOE bundle for %s\n\n"+
+			"Source manifest: %s\n"+
 			"Target: %s\n"+
 			"Build target: %s\n"+
 			"Created: %s\n\n"+
 			"This package is a portable app bundle format. The Go runtime is already compiled into the binary itself.\n"+
 			"Future runtime loaders can add sandboxing, launch metadata, or device-specific adapters.\n",
 		manifest.Name,
+		manifestPath,
 		TargetGOE,
 		manifest.BuildTarget(),
 		time.Now().UTC().Format(time.RFC3339),
@@ -286,12 +319,4 @@ func addBinaryToZip(zipWriter *zip.Writer, name, path string) error {
 
 	_, err = io.Copy(writer, file)
 	return err
-}
-
-func mustMarshal(value interface{}) []byte {
-	data, err := jsonMarshal(value)
-	if err != nil {
-		return []byte("{}")
-	}
-	return data
 }

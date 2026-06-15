@@ -1,6 +1,6 @@
 # GoUIX
 
-GoUIX is a modern, 100% Go-based UI framework designed to provide a powerful, flexible, and reactive approach to building web interfaces. Drawing inspiration from React, SvelteKit, and Flutter, GoUIX offers a unique Go-centric approach to UI development.
+GoUIX is a modern, 100% Go-based UI runtime designed to provide a powerful, flexible, and reactive approach to building web interfaces. Drawing inspiration from React, SvelteKit, and Flutter, GoUIX offers a unique Go-centric approach to UI development.
 
 ![GoUIX Logo](https://via.placeholder.com/800x400?text=GoUIX)
 
@@ -37,7 +37,7 @@ GoUIX is a modern, 100% Go-based UI framework designed to provide a powerful, fl
 ## Installation
 
 ```bash
-go get github.com/davidjeba/gouix
+go get github.com/gomazing/goscript/pkg/gouix
 ```
 
 ## Quick Start
@@ -49,7 +49,7 @@ package main
 
 import (
     "fmt"
-    "github.com/davidjeba/gouix"
+    "github.com/gomazing/goscript/pkg/gouix"
 )
 
 // Define a component
@@ -193,7 +193,7 @@ GoUIX provides a modern component model inspired by React and Flutter, but with 
 
 ### Built for Touch and DnD
 
-Unlike many frameworks where touch and drag-and-drop are afterthoughts, GoUIX is built from the ground up with these interactions in mind.
+Unlike many UI systems where touch and drag-and-drop are afterthoughts, GoUIX is built from the ground up with these interactions in mind.
 
 ### Canvas-First Approach
 
@@ -209,4 +209,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT License
+Apache License, Version 2.0

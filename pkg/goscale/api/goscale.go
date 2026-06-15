@@ -2,14 +2,14 @@ package api
 
 import (
         "context"
-        "encoding/json"
         "fmt"
         "net/http"
         "reflect"
         "sync"
         "time"
 
-        "github.com/davidjeba/goscript/pkg/goscale/db"
+        "github.com/gomazing/goscript/pkg/goscale/db"
+        "github.com/gomazing/goscript/pkg/hyper"
 )
 
 // GoScaleAPI represents the main API system that combines gRPC-like performance
@@ -188,7 +188,7 @@ func (g *GoScaleAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
                 Operation string                 `json:"operation"`
         }
         
-        if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+        if err := hyper.NewDecoder(r.Body).Decode(&request); err != nil {
                 http.Error(w, err.Error(), http.StatusBadRequest)
                 return
         }
@@ -219,10 +219,13 @@ func (g *GoScaleAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         }
         
         // Return the result
-        w.Header().Set("Content-Type", "application/json")
-        json.NewEncoder(w).Encode(map[string]interface{}{
+        w.Header().Set("Content-Type", "application/hyper")
+        if err := hyper.NewEncoder(w).Encode(map[string]interface{}{
                 "data": result,
-        })
+        }); err != nil {
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }
         
         g.updateMetrics(startTime, true)
 }

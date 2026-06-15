@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/davidjeba/goscript/pkg/buildout"
+	"github.com/gomazing/goscript/pkg/buildout"
 )
 
 func main() {
@@ -35,6 +35,9 @@ func main() {
 	}
 	if result.BundlePath != "" {
 		fmt.Printf("bundle: %s\n", result.BundlePath)
+	}
+	if result.SlicePath != "" {
+		fmt.Printf("slice: %s\n", result.SlicePath)
 	}
 }
 
@@ -122,4 +125,3 @@ Examples:
   bo calc.manifest - exe
 `))
 }
-

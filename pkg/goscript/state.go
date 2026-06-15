@@ -2,6 +2,7 @@ package goscript
 
 import (
 	"reflect"
+	"sort"
 	"sync"
 )
 
@@ -39,6 +40,43 @@ func (s *Store) Subscribe(key string, listener func(interface{})) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.listeners[key] = append(s.listeners[key], listener)
+}
+
+func (s *Store) DeleteState(key string) {
+	s.mu.Lock()
+	_, existed := s.state[key]
+	delete(s.state, key)
+	listeners := append([]func(interface{}){}, s.listeners[key]...)
+	s.mu.Unlock()
+
+	if existed {
+		for _, listener := range listeners {
+			go listener(nil)
+		}
+	}
+}
+
+func (s *Store) Snapshot() map[string]interface{} {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	out := make(map[string]interface{}, len(s.state))
+	for key, value := range s.state {
+		out[key] = value
+	}
+	return out
+}
+
+func (s *Store) Keys() []string {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	keys := make([]string, 0, len(s.state))
+	for key := range s.state {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 func (s *Store) notifyListeners(key string, value interface{}) {

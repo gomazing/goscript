@@ -1,175 +1,154 @@
-# GoScript: Go Native, Web Ready
+# GoScript
 
-GoScript is a Go-native language and application platform for building modern web experiences without handing the language layer to JavaScript. It keeps a familiar app structure for people who know modern web frameworks, but it is not a Next.js replacement. GoScript is the Go community's path to a first-class web stack in Go.
+Modern web language built for developing websites in vibe coding.
 
-[![GitHub stars](https://img.shields.io/github/stars/davidjeba/goscript?style=social)](https://github.com/davidjeba/goscript/stargazers)
-[![GitHub license](https://img.shields.io/github/license/davidjeba/goscript)](https://github.com/davidjeba/goscript/blob/main/LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/davidjeba/goscript)](https://goreportcard.com/report/github.com/davidjeba/goscript)
-[![GoDoc](https://godoc.org/github.com/davidjeba/goscript?status.svg)](https://godoc.org/github.com/davidjeba/goscript)
+## The Legacy Web Stack for the AI Era
 
-GoScript aims to give Go developers a single language across product logic, UI logic, and backend logic. The project includes language tooling, runtime primitives, rendering systems, API support, database integration, and performance tooling, all shaped around Go instead of JavaScript.
+GoScript is a Go-native web language and application platform for building websites, dashboards, ecommerce, swarm systems, and massive modular ERP software without handing the language layer to the legacy browser stack.
 
-## 🌟 Core Components
+It is multi-threaded by nature, performance-first, and increasingly batteries included: styling, UI primitives, motion, routing, API and database tooling, build-out exports, and AI-guided project structure.
 
-GoScript consists of several integrated components that work together to provide a complete development experience:
+GoScript is not a replacement for Next.js.
 
-### 1. Go-Native Language Layer
+GoScript is a replacement for the legacy browser scripting layer.
 
-GoScript provides a familiar app structure for developers coming from modern web frameworks, but the core idea is language ownership:
+GoScript is also being shaped as an agentic-first language: intelligent systems should be able to build, inspect, and extend GoScript programs as naturally as humans.
 
-- **Enhanced Component System**
-  - Class-based components with lifecycle methods
-  - Functional components
-  - Props validation
-  - Component state management
-  - Context API for state sharing
-  - Hooks system (useState, useEffect, useContext, useMemo, useCallback, useRef)
-  - JSX-like syntax parser
-  - Fragment support
-  - Component testing utilities
+Its longer-term architecture target is broader than today's digital-only languages. GoScript is being designed with a path toward ternary logic, multi-valued logic (MVL), and future quantum-capable execution models, while staying backward compatible with conventional digital runtimes.
 
-- **Core Platform Features**
-  - Server-side rendering (SSR)
-  - Client-side hydration
-  - Global state management
-  - Routing with middleware support
-  - Static asset management
-  - Hot-reloading for development
-  - CLI for language and project tooling
+[![GitHub stars](https://img.shields.io/github/stars/gomazing/goscript?style=social)](https://github.com/gomazing/goscript/stargazers)
+[![GitHub license](https://img.shields.io/github/license/gomazing/goscript)](https://github.com/gomazing/goscript/blob/main/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gomazing/goscript)](https://goreportcard.com/report/github.com/gomazing/goscript)
+[![GoDoc](https://godoc.org/github.com/gomazing/goscript?status.svg)](https://godoc.org/github.com/gomazing/goscript)
 
-### 2. Gocsx: Utility-First CSS for Go
+## Why GoScript
 
-Gocsx is a Tailwind-inspired CSS system that lets GoScript and Go projects style interfaces without leaving Go-centric tooling. It includes:
+- **Built for vibe coding**: develop modern websites and products with a Go-native language instead of stitching Go and the legacy browser stack together.
+- **Multi-threaded by nature**: GoScript inherits Go's concurrency-first mindset instead of growing out of a single-threaded web language.
+- **Performance first**: built for unparalleled performance with Go-native concurrency, strong server-side execution, and a path toward serious web and edge workloads.
+- **All batteries included**: styling, components, routing, API tooling, database tooling, motion primitives, build-out exports, and AI guidance layers.
+- **AI-era friendly**: `base/` and `agents/` let teams guide AI coders and build agentic runtime systems in a uniform way. GoScript is meant to be loved by autonomous builders, not only understood by humans.
+- **Built for future architectures**: use `cs` for clean client-server apps and `sw` for modular distributed server architecture with Swarm.
 
-- **Utility Classes**: A comprehensive set of utility classes for rapid UI development
-- **Component System**: Pre-built components with variants and responsive design
-- **Theme Support**: Customizable themes with dark/light mode support
-- **Platform Adapters**: Support for web, mobile, and other platforms
-- **CSS Generation**: Efficient CSS generation with minimal output size
+## Old Way vs Future Way
 
-[Learn more about Gocsx](./README_GOCSX.md)
+GoScript is built to replace the stitched-together legacy web stack with native building blocks for the AI era.
 
-### 3. GoEngine: 2D/3D Rendering Engine
+[Read the feature-by-feature guide](./docs/FUTURE_WAY_VS_OLD_WAY.md)
+[Open the proposal page for other AIs](./docs/proposed-updates.html)
 
-GoEngine provides a unified approach to 2D and 3D rendering, with support for:
+## Core Protocols
 
-- **WebGPU Integration**: Modern 3D graphics capabilities with:
-  - A Go wrapper around the WebGPU API
-  - Shader compilation and management
-  - Resource management for GPU buffers and textures
-  - A render pipeline abstraction
-- **Canvas2D API**: Simplified 2D drawing and animation
-- **Scene Graph**: Hierarchical scene management for both 2D and 3D
-- **Three.js-like API**: Familiar API for 3D scene management
-- **Performance Optimization**: 
-  - Automatic detection of interactive applications
-  - Performance throttling based on device capabilities
-  - Unified API for both 2D and 3D contexts
+- **Agentic-first**: AI systems are the primary builders and consumers of GoScript, with humans supported second.
+- **Machine-legible**: favor explicit semantics, clear contracts, and deterministic behavior that intelligent systems can reason about safely.
+- **Architecture-forward**: keep the language ready for digital, ternary, MVL, and future quantum-capable targets.
+- **Backward compatible**: digital execution remains the baseline path so GoScript can ship practical software today.
 
-### 4. GoScale: API and Database System
+## What You Can Build
 
-GoScale provides a high-performance API and database system with:
+1. Simple yet elegant websites using **Go Vibe**
+2. Robust ecommerce marketplaces with frontend and middleware
+3. Serverless and multi-server applications using **Swarm**
+4. Massive modular ERP systems
 
-- **GraphQL-like Flexibility**: Define schemas and queries with GraphQL-like syntax
-- **gRPC-like Performance**: High-performance binary protocol
-- **Edge Computing**: Distributed API processing
-- **Database Integration**: Support for PostgreSQL, NoSQL, and time-series data
-- **Schema Management**: Automatic schema generation and migration
+## Why You Are Going To Love BO
 
-[Learn more about GoScale](./README_GOSCALE.md)
+`BO` means **Build Out**.
 
-### 5. GOPM: Go Package Manager
+It lets you export a selected module, tool, or application slice into a deployable artifact without treating the whole product like one indivisible monolith.
 
-GOPM is a comprehensive package manager for Go projects, with special support for the GoScript ecosystem:
-
-- **Package Management**: Install, update, and manage dependencies
-- **Project Setup**: Initialize and configure projects
-- **Build Tools**: Build, test, and deploy applications
-- **Framework Integration**: Special commands for Gocsx, GoEngine, GoScale, and more
-
-[Learn more about GOPM](./README_GOPM.md)
-
-### 6. Jetpack: Performance Monitoring and Optimization
-
-Jetpack provides comprehensive performance monitoring and optimization tools:
-
-- **Real-time Metrics**: Monitor FPS, memory usage, API latency, and more
-- **Google Lighthouse Integration**: Run Lighthouse audits and track Core Web Vitals
-- **Performance Panel**: Floating translucent panel for real-time metrics visualization
-- **Chrome DevTools Extension**: Advanced performance monitoring in Chrome DevTools
-- **Security Monitoring**: Track vulnerabilities, suspicious activities, and security compliance
-
-[Learn more about Jetpack](./README_JETPACK.md)
-
-### 7. BO: Build Out Exporter
-
-BO is a standalone build-out command for exporting a selected module, tool, or application slice into a deployable artifact.
-
-- **Executable Export**: Build a selected tool or app entrypoint into a native binary
-- **GOE Bundle**: Package the compiled binary and manifest metadata into a portable bundle
-- **Platform Scaffolds**: Generate `apk`, `ipa`, and `dmg` packaging contracts for later native adapters
+- Export a tool as `exe`
+- Package a portable `goe`
+- Prepare app outputs for `apk`, `ipa`, and `dmg`
+- Build from packs so AI agents and humans can inspect what is being shipped
+- Export inspectable slices so modular apps can ship only the pieces they need
+- Turn one ERP into many focused binaries when needed
 
 [Learn more about BO](./README_BO.md)
 
-### 8. GoScript Foundations Now in Code
+## The Stack
 
-The repo now includes first-pass foundations for the language and runtime model:
+- **Go FAST**: compiler/runtime performance, lower-allocation rendering, routing, SSR, and hot-path efficiency
+- **Go PAINT**: canvas-first spatial UI, 2D/3D composition, pixel plotting, and hybrid surfaces
+- **Go IRT (In Real Time)**: realtime event hubs, streaming sync, scheduler-driven background work, and Swarm communication
+- **Go Jetpack**: profiling, observability, benchmarks, diagnostics, and verification workflows
+- **GoScript language layer**: components, pages, routing, SSR, hydration, state, hooks, and language/runtime primitives
+- **Go Vibe**: motion foundations inspired by Motion / Framer Motion, expressed in a Go-native way
+- **Gocsx**: utility-first styling for Go-native UI work
+- **GoScale**: API, database, and edge-oriented service foundations
+- **Swarm**: modular distributed server architecture for multi-node apps
+- **GOPM**: setup, tooling, package workflows, project manifests, lockfiles, and manifest-aware project scaffolding
+- **Go Jetpack**: performance and observability tooling
+- **Workspace foundations**: early models for docs, inline tables, file browsing, and Notion-style editing surfaces
+- **AI guidance layers**: `base/` for build-time instructions and `agents/` for runtime autonomous workers
 
-- **Language Core**: module registry, `Option`/`Result`, and pattern matching helpers
-- **AI Runtime**: worker scheduler, realtime event hub, and inference router
-- **UI Foundations**: form schemas, hydration metadata, offline sync queue, and test helpers
-- **Tooling Helpers**: source and markup normalization helpers for tests and code generation
-
-### 9. Guided Language Layers
-
-GoScript now carries two distinct AI-facing layers in the repository:
-
-- **`base/`**: build-time guidance for AI coders, including shared rules, `cs` and `sw` modes, project types, config packs, and security policies
-- **`agents/`**: runtime autonomous employees for applications that hire role-based agents such as `ceo`, `cfo`, or `ops`
-
+[Learn more about GOPM](./README_GOPM.md)
+[Learn more about Gocsx](./README_GOCSX.md)
+[Learn more about GoScale](./README_GOSCALE.md)
+[Learn more about Go Jetpack](./README_JETPACK.md)
+[Learn more about Vibe](./README_VIBE.md)
+[Roadmap pillars](./docs/ROADMAP_PILLARS.md)
+[Future use cases](./docs/FUTURE_USE_CASES.md)
+[Advanced capabilities checklist](./docs/ADVANCED_CAPABILITIES.md)
+[AI adoption checklist](./docs/AI_ADOPTION_CHECKLIST.md)
 [Base guidance](./base/README.md)
 [Runtime agents](./agents/README.md)
 
-### 10. Vibe Motion Foundations
+## Try It Now
 
-GoScript now includes first-pass foundations for a Go-native motion library called `vibe`, intended to grow into the GoScript answer to Motion / Framer Motion style interactions.
+Well, try now!
 
-- **Motion Primitives**: transitions, motion values, variants, gesture targets, presence tracking, and layout deltas
-- **Viewport Primitives**: scroll progress and in-view configuration for scroll-linked and scroll-triggered UI
+Ask Claude to build a website, admin app, dashboards, mobile app, or modular ERP using this repo. The new `goscript` CLI also gives you `fmt`, `check`, `index`, and `watch` workflows for day-to-day development.
 
-[Learn more about Vibe](./README_VIBE.md)
+Give your feedback.
 
-### 11. Advanced Capability Roadmap
+## Developer CLI
 
-The repo now carries a concrete checklist for the advanced platform work still needed around motion, i18n, Notion-style docs, inline tables, and file browsing.
+The `goscript` command now gives you a few language-native workflows:
 
-[Advanced capabilities checklist](./docs/ADVANCED_CAPABILITIES.md)
+- `go install github.com/gomazing/goscript/cmd/goscript@latest`
+- `goscript fmt [path ...]` to format source and markup files
+- `goscript check [path ...]` to scan for diagnostics and stub markers
+- `goscript index [path ...]` to build a lightweight symbol index
+- `goscript watch [path ...]` to poll for file changes and drive hot-reload workflows
+- `goscript add <component-name>` to scaffold a new component starter
 
-## 🚀 Getting Started
+This is the first layer of the DX pass for the language itself, not just the package manager.
+
+## Quick Start
 
 ### Installation
 
 ```bash
 # Install GOPM
-go install github.com/davidjeba/goscript/cmd/gopm@latest
+go install github.com/gomazing/goscript/cmd/gopm@latest
 
-# Initialize a new project
-gopm setup my-project
-cd my-project
-
-# Install dependencies
+# Create a website project
+gopm setup --cs --type website my-site
+cd my-site
 gopm get
 ```
 
-### Quick Start: Web Application
+### Quick Start: Website
 
 ```bash
-# Initialize a new web application
-gopm setup --template web my-app
+# Scaffold a website in client-server mode
+gopm setup --cs --type website my-app
 cd my-app
 
-# Start the development server
+# Start the development workflow
 gopm run dev
+```
+
+### Quick Start: Swarm ERP
+
+```bash
+# Scaffold a modular ERP in swarm mode
+gopm setup --sw --type erp my-erp
+cd my-erp
+
+# Review the generated pack
+cat packs/my-erp.pack
 ```
 
 ### Creating Web Components
@@ -214,8 +193,8 @@ import (
         "log"
         "net/http"
 
-        "github.com/davidjeba/goscript/pkg/gocsx"
-        "github.com/davidjeba/goscript/pkg/gocsx/engine"
+        "github.com/gomazing/goscript/pkg/gocsx"
+        "github.com/gomazing/goscript/pkg/gocsx/engine"
 )
 
 func main() {
@@ -257,8 +236,8 @@ import (
         "log"
         "net/http"
 
-        "github.com/davidjeba/goscript/pkg/gocsx"
-        "github.com/davidjeba/goscript/pkg/gocsx/engine"
+        "github.com/gomazing/goscript/pkg/gocsx"
+        "github.com/gomazing/goscript/pkg/gocsx/engine"
 )
 
 func main() {
@@ -298,8 +277,8 @@ package main
 import (
         "log"
 
-        "github.com/davidjeba/goscript/pkg/goscale/api"
-        "github.com/davidjeba/goscript/pkg/goscale/db"
+        "github.com/gomazing/goscript/pkg/goscale/api"
+        "github.com/gomazing/goscript/pkg/goscale/db"
 )
 
 func main() {
@@ -349,8 +328,8 @@ import (
         "log"
         "net/http"
 
-        "github.com/davidjeba/goscript/pkg/jetpack/core"
-        "github.com/davidjeba/goscript/pkg/jetpack/frontend"
+        "github.com/gomazing/goscript/pkg/jetpack/core"
+        "github.com/gomazing/goscript/pkg/jetpack/frontend"
 )
 
 func main() {
@@ -408,7 +387,13 @@ func main() {
 ### Component System
 - [Component System](docs/component-system.md)
 
-### Gocsx CSS Framework
+### Syntax and Abbreviations
+- [GoScript Syntax Glossary](./docs/SYNTAX.md)
+
+### Hyper Data Format
+- [Hyper Format](./docs/HYPER.md)
+
+### Gocsx Styling Layer
 - [Gocsx Documentation](./README_GOCSX.md)
 
 ### GoScale API and Database
@@ -422,11 +407,11 @@ func main() {
 
 ## 🏗️ Architecture
 
-GoScript follows a modular architecture that allows each component to be used independently or together as a complete platform:
+GoScript follows a layered language architecture that lets the language core, UI runtime, styling layer, build tools, and service layers work independently or together:
 
 ```
 GoScript
-├── Gocsx (CSS Framework)
+├── Gocsx (Styling Layer)
 │   ├── Core
 │   │   ├── Configuration
 │   │   ├── CSS Generator
@@ -484,58 +469,62 @@ GoScript
 
 ## 🔧 Configuration
 
-GoScript uses a unified configuration approach across all components:
+GoScript uses a unified Hyper configuration approach across all components:
 
-```json
-{
-  "gocsx": {
-    "theme": "default",
-    "breakpoints": {
-      "sm": "640px",
-      "md": "768px",
-      "lg": "1024px",
-      "xl": "1280px"
-    }
-  },
-  "engine": {
-    "webgpu": {
-      "enabled": true,
-      "shaders": "./shaders"
-    },
-    "canvas2d": {
-      "enabled": true,
-      "sprites": "./sprites"
-    }
-  },
-  "goscale": {
-    "api": {
-      "port": 8080,
-      "edge-enabled": true
-    },
-    "db": {
-      "connection-string": "localhost:5432",
-      "time-series-enabled": true
-    }
-  },
-  "jetpack": {
-    "monitoring": {
-      "enabled": true,
-      "metrics": ["fps", "memory_usage", "api_latency"]
-    },
-    "panel": {
-      "enabled": true,
-      "position": "bottom-right",
-      "opacity": 0.8
-    }
-  }
-}
+```hyper
+<goscript-config>
+  <gocsx>
+    <theme>default</theme>
+    <breakpoints>
+      <item key="sm">640px</item>
+      <item key="md">768px</item>
+      <item key="lg">1024px</item>
+      <item key="xl">1280px</item>
+    </breakpoints>
+  </gocsx>
+  <engine>
+    <webgpu>
+      <enabled>true</enabled>
+      <shaders>./shaders</shaders>
+    </webgpu>
+    <canvas2d>
+      <enabled>true</enabled>
+      <sprites>./sprites</sprites>
+    </canvas2d>
+  </engine>
+  <goscale>
+    <api>
+      <port>8080</port>
+      <edge-enabled>true</edge-enabled>
+    </api>
+    <db>
+      <connection-string>localhost:5432</connection-string>
+      <time-series-enabled>true</time-series-enabled>
+    </db>
+  </goscale>
+  <jetpack>
+    <monitoring>
+      <enabled>true</enabled>
+      <metrics>
+        <item>fps</item>
+        <item>memory_usage</item>
+        <item>api_latency</item>
+      </metrics>
+    </monitoring>
+    <panel>
+      <enabled>true</enabled>
+      <position>bottom-right</position>
+      <opacity>0.8</opacity>
+    </panel>
+  </jetpack>
+</goscript-config>
 ```
 
 ## 📋 Feature Comparison
 
-### GoScript vs JavaScript
+### GoScript vs the Legacy Browser Stack
 
-- **Language**: GoScript is Go-native, JavaScript is the browser's native language and ecosystem.
+- **Language**: GoScript is Go-native, the legacy browser stack is the browser's current native scripting layer.
 - **Team workflow**: GoScript keeps product logic and UI logic in one Go mental model.
 - **Performance**: GoScript inherits Go's compiled, predictable runtime characteristics.
 - **Type safety**: GoScript benefits from Go's compile-time guarantees and explicitness.
@@ -545,19 +534,19 @@ GoScript uses a unified configuration approach across all components:
 
 ### GoScript vs React
 
-- **Language**: GoScript uses Go, React uses JavaScript/TypeScript.
+- **Language**: GoScript uses Go, React uses the legacy browser stack.
 - **Performance**: GoScript offers better performance due to Go's efficiency.
 - **Type Safety**: GoScript has stronger type safety through Go's type system.
 - **Learning Curve**: Familiar app structure for React developers, but grounded in Go.
 - **Ecosystem**: React has a larger ecosystem, while GoScript integrates with Go libraries.
-- **CSS Framework**: GoScript includes Gocsx, React requires external libraries.
+- **CSS Layer**: GoScript includes Gocsx, React requires external libraries.
 - **3D Rendering**: GoScript includes WebGPU integration, React requires external libraries.
 - **API System**: GoScript includes GoScale, React requires external libraries.
 - **Performance Monitoring**: GoScript includes Jetpack, React requires external libraries.
 
 ### Gocsx vs Tailwind CSS
 
-- **Language**: Gocsx uses Go, Tailwind uses JavaScript/CSS
+- **Language**: Gocsx uses Go, Tailwind uses the legacy browser stack/CSS
 - **Platforms**: Gocsx supports web, mobile, and AR/VR, Tailwind is web-only
 - **Type Safety**: Gocsx has type safety, Tailwind does not
 - **Components**: Gocsx has built-in components, Tailwind requires additional libraries
@@ -565,7 +554,7 @@ GoScript uses a unified configuration approach across all components:
 
 ### GoScript WebGPU vs Three.js
 
-- **Language**: GoScript uses Go, Three.js uses JavaScript
+- **Language**: GoScript uses Go, Three.js uses the legacy browser stack
 - **Integration**: GoScript offers tighter integration with the application
 - **Performance**: GoScript can achieve better performance through Go
 - **Type Safety**: GoScript has stronger type safety
@@ -575,7 +564,7 @@ GoScript uses a unified configuration approach across all components:
 
 GoScript matters because it gives the Go community a native blessing: a way to build modern web apps without asking every team member to learn a second language just to ship the frontend.
 
-That means less context switching, fewer seams between backend and UI, and more of the product living in the language Go developers already trust. The point is not to replace JavaScript in the browser. The point is to let Go teams own more of the stack in Go, with the same clarity and discipline that made them choose Go in the first place.
+That means less context switching, fewer seams between backend and UI, and more of the product living in the language Go developers already trust. The point is not to replace the legacy browser scripting layer in the browser. The point is to let Go teams own more of the stack in Go, with the same clarity and discipline that made them choose Go in the first place.
 
 ## 🔄 Roadmap
 
@@ -585,7 +574,7 @@ That means less context switching, fewer seams between backend and UI, and more 
 - **Testing Infrastructure**: Comprehensive testing tools
 - **IDE Integration**: Integration with popular IDEs
 - **Animation System**: Advanced animation and transition system
-- **Machine Learning Integration**: Integration with ML frameworks
+- **Machine Learning Integration**: Integration with ML toolkits and inference runtimes
 - **Serverless Deployment**: Support for serverless deployment
 - **Multi-tenant Support**: Built-in multi-tenant capabilities
 - **Internationalization**: Built-in i18n support
@@ -598,8 +587,8 @@ Check out the examples in the repository:
 - `pkg/components/counter.go`: Demonstrates class-based components with state
 - `pkg/components/home.go`: Shows how to use the context API and functional components
 
-### CSS Framework
-- `cmd/gocsx_demo`: Basic CSS framework demo
+### Styling Layer
+- `cmd/gocsx_demo`: Basic styling layer demo
 
 ### 2D and 3D Applications
 - `cmd/gocsx_2d_demo`: 2D canvas application demo
@@ -617,4 +606,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-MIT License
+Apache License, Version 2.0

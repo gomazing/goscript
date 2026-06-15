@@ -31,19 +31,38 @@ func NewSyncQueue() *SyncQueue {
 
 // Enqueue adds a new sync action.
 func (q *SyncQueue) Enqueue(action SyncAction) {
-	if action.CreatedAt.IsZero() {
-		action.CreatedAt = time.Now().UTC()
+	q.EnqueueBatch([]SyncAction{action})
+}
+
+// EnqueueBatch adds multiple sync actions with one lock pass.
+func (q *SyncQueue) EnqueueBatch(actions []SyncAction) {
+	if len(actions) == 0 {
+		return
 	}
 
+	stamp := time.Now().UTC()
+	normalized := make([]SyncAction, 0, len(actions))
+	listeners := make([]func([]SyncAction), 0)
+
 	q.mu.Lock()
-	q.items = append(q.items, action)
-	listeners := append([]func([]SyncAction){}, q.listeners...)
-	snapshot := append([]SyncAction(nil), q.items...)
+	for _, action := range actions {
+		if action.CreatedAt.IsZero() {
+			action.CreatedAt = stamp
+		}
+		q.items = append(q.items, action)
+		normalized = append(normalized, action)
+	}
+	listeners = append(listeners, q.listeners...)
 	q.mu.Unlock()
 
+	if len(listeners) == 0 {
+		return
+	}
+
+	batch := append([]SyncAction(nil), normalized...)
 	for _, listener := range listeners {
 		if listener != nil {
-			go listener(snapshot)
+			go listener(batch)
 		}
 	}
 }
@@ -53,8 +72,8 @@ func (q *SyncQueue) Drain() []SyncAction {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
-	out := append([]SyncAction(nil), q.items...)
-	q.items = q.items[:0]
+	out := q.items
+	q.items = nil
 	return out
 }
 
@@ -66,10 +85,9 @@ func (q *SyncQueue) Snapshot() []SyncAction {
 	return append([]SyncAction(nil), q.items...)
 }
 
-// Subscribe registers a queue listener.
+// Subscribe registers a queue listener that receives newly enqueued batches.
 func (q *SyncQueue) Subscribe(listener func([]SyncAction)) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 	q.listeners = append(q.listeners, listener)
 }
-

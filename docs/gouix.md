@@ -1,6 +1,6 @@
-# GoUIX: A Modern UI Framework for Go
+# GoUIX: A Modern UI Runtime for Go
 
-GoUIX is a powerful, 100% Go-based UI framework designed to provide a modern, reactive, and flexible approach to building web interfaces. Drawing inspiration from the best parts of React, SvelteKit, and Flutter, GoUIX offers a unique Go-centric approach to UI development.
+GoUIX is a powerful, 100% Go-based UI runtime designed to provide a modern, reactive, and flexible approach to building web interfaces. Drawing inspiration from the best parts of React, SvelteKit, and Flutter, GoUIX offers a unique Go-centric approach to UI development.
 
 ## Core Features
 
@@ -284,11 +284,11 @@ gouix.CreateElement("div", gouix.Props{
 5. **Event Delegation**: Use event delegation for better performance
 6. **Virtualization**: Use virtualization for long lists
 
-## Comparison with Other Frameworks
+## Comparison with Other UI Runtimes
 
 ### GoUIX vs React
 
-- **Language**: GoUIX uses 100% Go, React uses JavaScript/TypeScript
+- **Language**: GoUIX uses 100% Go, React uses the legacy browser stack
 - **Rendering**: Both support SSR and client-side rendering
 - **State Management**: GoUIX has built-in reactive state, React uses hooks/context
 - **Performance**: GoUIX optimizes for server rendering, React for client rendering
@@ -296,7 +296,7 @@ gouix.CreateElement("div", gouix.Props{
 
 ### GoUIX vs SvelteKit
 
-- **Language**: GoUIX uses Go, SvelteKit uses JavaScript/TypeScript
+- **Language**: GoUIX uses Go, SvelteKit uses the legacy browser stack
 - **Compilation**: Both compile components, but in different ways
 - **Reactivity**: Both have built-in reactivity systems
 - **Bundle Size**: GoUIX has no client-side runtime, SvelteKit has minimal runtime

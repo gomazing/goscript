@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/davidjeba/goscript/pkg/gouix"
+	"github.com/gomazing/goscript/pkg/gouix"
 )
 
 func TestCounter(t *testing.T) {

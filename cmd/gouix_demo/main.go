@@ -7,7 +7,7 @@ import (
         "os"
         "path/filepath"
 
-        "github.com/davidjeba/goscript/pkg/components"
+        "github.com/gomazing/goscript/pkg/components"
 )
 
 func main() {

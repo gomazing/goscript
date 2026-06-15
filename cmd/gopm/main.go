@@ -5,8 +5,8 @@ import (
         "os"
         "strings"
 
-        "github.com/davidjeba/goscript/cmd/gopm/commands"
-        "github.com/davidjeba/goscript/pkg/gopm"
+        "github.com/gomazing/goscript/cmd/gopm/commands"
+        "github.com/gomazing/goscript/pkg/gopm"
 )
 
 func main() {
@@ -58,6 +58,10 @@ func main() {
                 pm.Auth(args)
         case "setup":
                 pm.Setup(args)
+        case "manifest":
+                pm.Manifest(args)
+        case "lock":
+                pm.Lock(args)
         case "sync":
                 pm.Sync(args)
         case "doctor":
@@ -181,6 +185,8 @@ Basic Commands:
   help          Show help
   auth          Authenticate with registry
   setup         Setup project and generate a build manifest
+  manifest      Read or scaffold the project package manifest
+  lock          Generate a project lockfile from the manifest
   sync          Sync dependencies
   doctor        Diagnose and fix issues
   migrate       Migrate to a new version
@@ -254,4 +260,6 @@ For more information, run: gopm help [command]
         fmt.Println("  gopm setup my-project")
         fmt.Println("  gopm setup --cs --type website my-site")
         fmt.Println("  gopm setup --sw --type erp my-erp")
+        fmt.Println("  gopm manifest")
+        fmt.Println("  gopm lock")
 }

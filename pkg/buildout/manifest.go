@@ -1,9 +1,7 @@
 package buildout
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 )
@@ -35,6 +33,8 @@ type Manifest struct {
 	Folders     []string          `json:"folders,omitempty"`
 	Include     []string          `json:"include,omitempty"`
 	Assets      []string          `json:"assets,omitempty"`
+	Slices      []PackSlice       `json:"slices,omitempty"`
+	Bundles     []PackBundle      `json:"bundles,omitempty"`
 	Environment map[string]string `json:"environment,omitempty"`
 	Metadata    map[string]string `json:"metadata,omitempty"`
 	Bundle      bool              `json:"bundle,omitempty"`
@@ -48,6 +48,7 @@ type BuildPlan struct {
 	BuildTarget  string            `json:"build_target"`
 	ArtifactRoot string            `json:"artifact_root"`
 	CreatedAt    string            `json:"created_at"`
+	Slice        ExportSlice       `json:"slice,omitempty"`
 	Notes        []string          `json:"notes,omitempty"`
 }
 
@@ -61,6 +62,7 @@ type BuildResult struct {
 	Message      string   `json:"message"`
 	OutputPath   string   `json:"output_path,omitempty"`
 	BundlePath   string   `json:"bundle_path,omitempty"`
+	SlicePath    string   `json:"slice_path,omitempty"`
 	Artifacts    []string `json:"artifacts,omitempty"`
 }
 
@@ -80,29 +82,6 @@ func ParseTarget(raw string) (Target, error) {
 	default:
 		return "", fmt.Errorf("unsupported target %q", raw)
 	}
-}
-
-// LoadManifest reads a JSON manifest from disk.
-func LoadManifest(path string) (Manifest, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return Manifest{}, err
-	}
-	defer f.Close()
-
-	decoder := json.NewDecoder(f)
-
-	var manifest Manifest
-	if err := decoder.Decode(&manifest); err != nil {
-		return Manifest{}, fmt.Errorf("decode manifest %q: %w", path, err)
-	}
-
-	manifest.Normalize(path)
-	if err := manifest.Validate(); err != nil {
-		return Manifest{}, err
-	}
-
-	return manifest, nil
 }
 
 // Normalize fills defaults that are safe to infer.
@@ -151,19 +130,19 @@ func (m *Manifest) Normalize(sourcePath string) {
 // Validate makes sure the manifest has the minimum export contract.
 func (m Manifest) Validate() error {
 	if strings.TrimSpace(m.Name) == "" {
-		return fmt.Errorf("manifest name is required")
+		return fmt.Errorf("pack name is required")
 	}
 
 	if strings.TrimSpace(m.Output) == "" {
-		return fmt.Errorf("manifest output is required")
+		return fmt.Errorf("pack output is required")
 	}
 
 	if m.Mode != "" && m.Mode != "cs" && m.Mode != "sw" {
-		return fmt.Errorf("manifest mode must be either \"cs\" or \"sw\"")
+		return fmt.Errorf("pack mode must be either \"cs\" or \"sw\"")
 	}
 
 	if strings.TrimSpace(m.Module) == "" && strings.TrimSpace(m.Entrypoint) == "" {
-		return fmt.Errorf("manifest must define a module or entrypoint")
+		return fmt.Errorf("pack must define a module or entrypoint")
 	}
 
 	return nil
@@ -228,18 +207,4 @@ func (m Manifest) Plan(path string, target Target, distDir string) BuildPlan {
 		ArtifactRoot:  m.PlannedOutputDir(distDir),
 		CreatedAt:    nowRFC3339(),
 	}
-}
-
-// writeJSONFile writes a pretty-printed JSON file.
-func writeJSONFile(path string, value interface{}) error {
-	data, err := json.MarshalIndent(value, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-		return err
-	}
-
-	return os.WriteFile(path, data, 0o644)
 }

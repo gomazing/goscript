@@ -19,6 +19,7 @@ It is not a runtime framework folder. It defines how AI should shape projects, c
 - Let AI coders follow explicit generation rules instead of inventing ad hoc layouts
 - Separate build-time guidance from runtime autonomous agents
 - Keep GoScript language-driven while still being a guided language
+- Treat agentic systems as the primary audience while still supporting human developers
 
 ## Layout
 
@@ -42,4 +43,3 @@ base/
     core.md
     swarm-strict.md
 ```
-
